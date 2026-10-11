@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v3';
+const CACHE='jennysells-test-v4';
 const ASSETS=[
   '/JennySells-Test/',
   '/JennySells-Test/index.html',

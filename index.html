@@ -4,20 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#007782" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="JennySells" />
   <title>JennySells – Vinted Test</title>
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/JennySells-Test/manifest.webmanifest" />
+  <link rel="icon" href="/JennySells-Test/icon-192.png" />
+  <link rel="apple-touch-icon" href="/JennySells-Test/icon-192.png" />
   <style>
     :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#17252a;background:#f5f7f7}
     *{box-sizing:border-box} body{margin:0;padding:24px 16px 48px} main{max-width:620px;margin:auto}
     h1{font-size:1.65rem;margin:.2rem 0 .35rem}.sub{color:#5c6b70;margin:0 0 22px}
     .card{background:#fff;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 3px 18px #00000010}
     label{display:block;font-size:.85rem;font-weight:700;margin:12px 0 6px;color:#41545a}
-    input,textarea{width:100%;border:1px solid #cad5d8;border-radius:12px;padding:12px;font:inherit;background:#fff}
-    textarea{min-height:92px;resize:vertical}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    textarea{width:100%;border:1px solid #cad5d8;border-radius:12px;padding:12px;font:inherit;background:#fff;min-height:92px;resize:vertical}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     button,a.btn{display:inline-block;border:0;border-radius:12px;padding:12px 15px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
     .primary{background:#007782;color:white}.secondary{background:#e8f3f3;color:#00646d}.muted{font-size:.86rem;color:#687a80}
-    .ok{background:#eef8f2;border:1px solid #b7dfc4}.pill{display:inline-block;background:#e8f3f3;color:#00646d;padding:5px 9px;border-radius:99px;font-size:.8rem;font-weight:700}
+    .ok{background:#eef8f2;border:1px solid #b7dfc4}.warn{background:#fff8e8;border:1px solid #efd894}
+    .pill{display:inline-block;background:#e8f3f3;color:#00646d;padding:5px 9px;border-radius:99px;font-size:.8rem;font-weight:700}
     .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.value{font-weight:750;word-break:break-word}.hidden{display:none}
     @media(max-width:480px){.grid{grid-template-columns:1fr}}
   </style>
@@ -27,6 +33,12 @@
   <span class="pill">Proof of Concept</span>
   <h1>JennySells – Vinted Link Test</h1>
   <p class="sub">Testet, ob ein geteilter Vinted-Link in einer installierten Web-App ankommt.</p>
+
+  <section class="card" id="installCard">
+    <strong>PWA-Status</strong>
+    <p class="muted" id="pwaStatus">Prüfe Installationsstatus …</p>
+    <button class="primary hidden" id="installBtn">JennySells installieren</button>
+  </section>
 
   <section class="card">
     <label for="raw">Geteilter Inhalt / Vinted-Link</label>
@@ -58,12 +70,37 @@
 
   <section class="card">
     <strong>Android-Test</strong>
-    <p class="muted">1. Diese Seite in Chrome öffnen. 2. Über Chrome-Menü „Zum Startbildschirm hinzufügen“ / „App installieren“. 3. Danach einen Vinted-Link in Chrome oder WhatsApp teilen. 4. Im Teilen-Menü sollte „JennySells Test“ erscheinen.</p>
+    <p class="muted">
+      1. JennySells installieren. 2. Einen Vinted-Link in Chrome oder WhatsApp teilen.
+      3. Im Android-Teilen-Menü sollte „JennySells“ erscheinen.
+    </p>
   </section>
 </main>
+
 <script>
 const $=id=>document.getElementById(id);
 const raw=$('raw'), result=$('result'), savedBox=$('savedBox');
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  $('installBtn').classList.remove('hidden');
+  $('pwaStatus').textContent = 'Installierbar ✓';
+});
+
+$('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const choice = await deferredPrompt.userChoice;
+  $('pwaStatus').textContent = choice.outcome === 'accepted' ? 'Installation gestartet ✓' : 'Installation abgebrochen';
+  deferredPrompt = null;
+  $('installBtn').classList.add('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  $('pwaStatus').textContent = 'JennySells ist installiert ✓';
+});
 
 function findUrl(text){
   const m=(text||'').match(/https?:\/\/[^\s]+/i);
@@ -91,25 +128,53 @@ function parse(text){
   $('url').textContent=u;
   $('openBtn').href=u;
   result.classList.remove('hidden');
-  result.dataset.record=JSON.stringify({platform:isVinted?'Vinted':'Unbekannt',itemId:match?match[1]:null,title:match&&match[2]?slugToTitle(match[2]):'',url:u,importedAt:new Date().toISOString()});
+  result.dataset.record=JSON.stringify({
+    platform:isVinted?'Vinted':'Unbekannt',
+    itemId:match?match[1]:null,
+    title:match&&match[2]?slugToTitle(match[2]):'',
+    url:u,
+    importedAt:new Date().toISOString()
+  });
 }
 
 $('parseBtn').onclick=()=>parse(raw.value);
-$('sampleBtn').onclick=()=>{raw.value='https://www.vinted.de/items/8978325221-ca-hose-jogginghose-grosse-86';parse(raw.value)};
+$('sampleBtn').onclick=()=>{
+  raw.value='https://www.vinted.de/items/8978325221-ca-hose-jogginghose-grosse-86';
+  parse(raw.value);
+};
 $('saveBtn').onclick=()=>{
   if(!result.dataset.record)return;
   const rec=JSON.parse(result.dataset.record);
   const all=JSON.parse(localStorage.getItem('jennysellsPocItems')||'[]');
-  all.unshift(rec); localStorage.setItem('jennysellsPocItems',JSON.stringify(all));
+  all.unshift(rec);
+  localStorage.setItem('jennysellsPocItems',JSON.stringify(all));
   $('savedText').textContent=` ${rec.title || rec.itemId} · ${new Date().toLocaleString('de-DE')}`;
   savedBox.classList.remove('hidden');
 };
 
 const qp=new URLSearchParams(location.search);
 const incoming=[qp.get('title'),qp.get('text'),qp.get('url')].filter(Boolean).join('\n');
-if(incoming){raw.value=incoming;parse(incoming);history.replaceState({},'',location.pathname)}
+if(incoming){
+  raw.value=incoming;
+  parse(incoming);
+  history.replaceState({},'',location.pathname);
+}
 
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(console.error)}
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/JennySells-Test/sw.js', {scope:'/JennySells-Test/'})
+    .then(()=> {
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        $('pwaStatus').textContent = 'JennySells läuft als installierte App ✓';
+      } else if (!$('installBtn').classList.contains('hidden')) {
+        // beforeinstallprompt already fired
+      } else {
+        $('pwaStatus').textContent = 'Service Worker aktiv. Falls kein Installieren-Button erscheint: Seite einmal neu laden.';
+      }
+    })
+    .catch(err => {
+      $('pwaStatus').textContent = 'Service Worker Fehler: ' + err.message;
+    });
+}
 </script>
 </body>
 </html>

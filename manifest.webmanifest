@@ -5,37 +5,17 @@
   "start_url": "/JennySells-Test/",
   "scope": "/JennySells-Test/",
   "display": "standalone",
-  "background_color": "#f5f7f7",
-  "theme_color": "#007782",
-  "description": "Proof of concept for importing shared Vinted links into JennySells.",
+  "background_color": "#fff8f4",
+  "theme_color": "#71389b",
+  "description": "JennySells – Second-Hand mit Herz.",
   "icons": [
-    {
-      "src": "/JennySells-Test/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/JennySells-Test/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/JennySells-Test/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    {"src":"/JennySells-Test/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"/JennySells-Test/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ],
   "share_target": {
     "action": "/JennySells-Test/",
     "method": "GET",
     "enctype": "application/x-www-form-urlencoded",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
+    "params": {"title":"title","text":"text","url":"url"}
   }
 }

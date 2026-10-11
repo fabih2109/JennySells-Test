@@ -8,31 +8,32 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="JennySells" />
-  <title>JennySells – Vinted Test</title>
+  <title>JennySells – Vinted Import Test</title>
   <link rel="manifest" href="/JennySells-Test/manifest.webmanifest" />
   <link rel="icon" href="/JennySells-Test/icon-192.png" />
   <link rel="apple-touch-icon" href="/JennySells-Test/icon-192.png" />
   <style>
     :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#17252a;background:#f5f7f7}
-    *{box-sizing:border-box} body{margin:0;padding:24px 16px 48px} main{max-width:620px;margin:auto}
-    h1{font-size:1.65rem;margin:.2rem 0 .35rem}.sub{color:#5c6b70;margin:0 0 22px}
+    *{box-sizing:border-box}body{margin:0;padding:24px 16px 48px}main{max-width:620px;margin:auto}
+    h1{font-size:1.65rem;margin:.2rem 0 .35rem}h2{margin:0 0 12px}.sub{color:#5c6b70;margin:0 0 22px}
     .card{background:#fff;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 3px 18px #00000010}
-    label{display:block;font-size:.85rem;font-weight:700;margin:12px 0 6px;color:#41545a}
-    textarea{width:100%;border:1px solid #cad5d8;border-radius:12px;padding:12px;font:inherit;background:#fff;min-height:92px;resize:vertical}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    button,a.btn{display:inline-block;border:0;border-radius:12px;padding:12px 15px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+    label{display:block;font-size:.84rem;font-weight:750;margin:12px 0 6px;color:#41545a}
+    input,textarea,select{width:100%;border:1px solid #cad5d8;border-radius:12px;padding:12px;font:inherit;background:#fff;color:#17252a}
+    textarea{min-height:86px;resize:vertical}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    button,a.btn{display:inline-block;border:0;border-radius:12px;padding:12px 15px;font:inherit;font-weight:750;text-decoration:none;cursor:pointer}
     .primary{background:#007782;color:white}.secondary{background:#e8f3f3;color:#00646d}.muted{font-size:.86rem;color:#687a80}
-    .ok{background:#eef8f2;border:1px solid #b7dfc4}.warn{background:#fff8e8;border:1px solid #efd894}
-    .pill{display:inline-block;background:#e8f3f3;color:#00646d;padding:5px 9px;border-radius:99px;font-size:.8rem;font-weight:700}
+    .ok{background:#eef8f2;border:1px solid #b7dfc4}.pill{display:inline-block;background:#e8f3f3;color:#00646d;padding:5px 9px;border-radius:99px;font-size:.8rem;font-weight:750}
     .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.value{font-weight:750;word-break:break-word}.hidden{display:none}
-    @media(max-width:480px){.grid{grid-template-columns:1fr}}
+    .sectionTitle{margin-top:20px;padding-top:16px;border-top:1px solid #e7eeee;font-weight:800}.source{font-size:.8rem;color:#6d7e83;word-break:break-word}
+    .status{display:inline-block;padding:5px 9px;border-radius:999px;background:#eaf8ef;color:#267643;font-size:.78rem;font-weight:800}
+    @media(max-width:520px){.grid,.grid3{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <main>
   <span class="pill">Proof of Concept</span>
-  <h1>JennySells – Vinted Link Test</h1>
-  <p class="sub">Testet, ob ein geteilter Vinted-Link in einer installierten Web-App ankommt.</p>
+  <h1>JennySells</h1>
+  <p class="sub">Vinted-Artikel teilen, automatisch erkennen und mit privaten Angaben ergänzen.</p>
 
   <section class="card" id="installCard">
     <strong>PWA-Status</strong>
@@ -42,139 +43,125 @@
 
   <section class="card">
     <label for="raw">Geteilter Inhalt / Vinted-Link</label>
-    <textarea id="raw" placeholder="Vinted-Link hier einfügen oder über Teilen an diese App senden"></textarea>
+    <textarea id="raw" placeholder="Vinted-Link hier einfügen oder über Teilen an JennySells senden"></textarea>
     <div class="row">
-      <button class="primary" id="parseBtn">Link auswerten</button>
+      <button class="primary" id="parseBtn">Artikel übernehmen</button>
       <button class="secondary" id="sampleBtn">Beispiel laden</button>
     </div>
   </section>
 
-  <section class="card hidden" id="result">
-    <h2 style="margin-top:0">Erkannt</h2>
-    <div class="grid">
-      <div><label>Plattform</label><div class="value" id="platform">–</div></div>
-      <div><label>Vinted-ID</label><div class="value" id="itemId">–</div></div>
+  <section class="card hidden" id="editor">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+      <h2>Artikel</h2><span class="status">Vinted · Online</span>
     </div>
-    <label>Titel aus URL</label><div class="value" id="title">–</div>
-    <label>Original-Link</label><div class="value" id="url">–</div>
+
+    <label>Übernommener Vinted-Titel</label>
+    <div class="value" id="sharedTitle">–</div>
+
+    <div class="grid">
+      <div><label for="brand">Marke</label><input id="brand" /></div>
+      <div><label for="size">Größe</label><input id="size" inputmode="numeric" /></div>
+    </div>
+    <label for="category">Kategorie</label><input id="category" />
+    <label for="condition">Zustand</label>
+    <select id="condition">
+      <option value="">– bitte ergänzen –</option>
+      <option>Neu mit Etikett</option><option>Neu ohne Etikett</option><option>Sehr gut</option><option>Gut</option><option>Zufriedenstellend</option>
+    </select>
+
+    <div class="sectionTitle">Vinted-Angebot</div>
+    <div class="grid">
+      <div><label>Vinted-ID</label><div class="value" id="itemId">–</div></div>
+      <div><label for="offerPrice">Angebotspreis</label><input id="offerPrice" type="number" min="0" step="0.01" placeholder="z. B. 12,00" /></div>
+    </div>
+    <label for="onlineSince">Online seit</label><input id="onlineSince" type="date" />
+    <label>Original-Link</label><div class="source" id="url">–</div>
+    <div class="row"><a class="btn secondary" id="openBtn" target="_blank" rel="noopener">In Vinted öffnen</a></div>
+
+    <div class="sectionTitle">Private Angaben</div>
+    <div class="grid">
+      <div><label for="child">Kind</label><select id="child"><option value="">– auswählen –</option><option>Felix</option><option>Ben</option><option>Andere</option></select></div>
+      <div><label for="purchasePrice">Kaufpreis damals</label><input id="purchasePrice" type="number" min="0" step="0.01" placeholder="z. B. 39,99" /></div>
+    </div>
+    <div class="grid">
+      <div><label for="purchaseDate">Kaufdatum / Jahr</label><input id="purchaseDate" placeholder="z. B. 2023" /></div>
+      <div><label for="storage">Lagerort</label><input id="storage" placeholder="z. B. Keller → Kiste 86/92" /></div>
+    </div>
+    <label for="note">Eigene Notiz</label><textarea id="note" placeholder="z. B. kleiner Fleck innen am Ärmel"></textarea>
+
     <div class="row">
-      <a class="btn primary" id="openBtn" target="_blank" rel="noopener">In Vinted öffnen</a>
-      <button class="secondary" id="saveBtn">Testdatensatz speichern</button>
+      <button class="primary" id="saveBtn">Artikel lokal speichern</button>
     </div>
   </section>
 
   <section class="card ok hidden" id="savedBox">
-    <strong>✓ Lokal gespeichert</strong>
+    <strong>✓ Artikel gespeichert</strong>
     <div class="muted" id="savedText"></div>
-  </section>
-
-  <section class="card">
-    <strong>Android-Test</strong>
-    <p class="muted">
-      1. JennySells installieren. 2. Einen Vinted-Link in Chrome oder WhatsApp teilen.
-      3. Im Android-Teilen-Menü sollte „JennySells“ erscheinen.
-    </p>
   </section>
 </main>
 
 <script>
 const $=id=>document.getElementById(id);
-const raw=$('raw'), result=$('result'), savedBox=$('savedBox');
-let deferredPrompt = null;
+const raw=$('raw'), editor=$('editor'), savedBox=$('savedBox');
+let deferredPrompt=null;
+let currentBase=null;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  $('installBtn').classList.remove('hidden');
-  $('pwaStatus').textContent = 'Installierbar ✓';
-});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.remove('hidden');$('pwaStatus').textContent='Installierbar ✓'});
+$('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();const choice=await deferredPrompt.userChoice;$('pwaStatus').textContent=choice.outcome==='accepted'?'Installation gestartet ✓':'Installation abgebrochen';deferredPrompt=null;$('installBtn').classList.add('hidden')});
+window.addEventListener('appinstalled',()=>{$('pwaStatus').textContent='JennySells ist installiert ✓'});
 
-$('installBtn').addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const choice = await deferredPrompt.userChoice;
-  $('pwaStatus').textContent = choice.outcome === 'accepted' ? 'Installation gestartet ✓' : 'Installation abgebrochen';
-  deferredPrompt = null;
-  $('installBtn').classList.add('hidden');
-});
-
-window.addEventListener('appinstalled', () => {
-  $('pwaStatus').textContent = 'JennySells ist installiert ✓';
-});
-
-function findUrl(text){
-  const m=(text||'').match(/https?:\/\/[^\s]+/i);
-  return m?m[0].replace(/[)>.,]+$/,''):'';
+function findUrl(text){const m=(text||'').match(/https?:\/\/[^\s]+/i);return m?m[0].replace(/[)>.,]+$/,''):''}
+function titleBeforeUrl(text){const u=findUrl(text);const before=u?text.slice(0,text.indexOf(u)):text;return before.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).join(' ').trim()}
+function slugToTitle(slug){return decodeURIComponent(slug||'').replace(/-/g,' ').replace(/\bca\b/i,'C&A').replace(/\bgrosse\b/gi,'Größe').replace(/\bgr\b/gi,'Gr.').replace(/\s+/g,' ').trim()}
+function cleanSharedTitle(title){return (title||'').replace(/\s*\|\s*Vinted\s*$/i,'').trim()}
+function parseProductFields(title,fallback){
+  const source=cleanSharedTitle(title)||fallback||'';
+  const parts=source.split('|').map(x=>x.trim()).filter(Boolean);
+  let brand='',size='',category='';
+  const sizeMatch=source.match(/(?:Größe|Gr\.?|Size)\s*[:]?\s*(\d{2,3}[A-Za-z]?)/i);
+  if(sizeMatch)size=sizeMatch[1];
+  if(parts.length>=2){
+    brand=parts[0];
+    const middle=parts.slice(1).filter(p=>!/^Vinted$/i.test(p)&&!/(?:Größe|Gr\.?|Size)\s*[:]?\s*\d{2,3}/i.test(p));
+    category=middle.join(' / ');
+  }
+  if(!brand && fallback){const words=fallback.split(' ');brand=words[0]||''}
+  if(!category && fallback){category=fallback.replace(new RegExp('^'+brand.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*','i'),'').replace(/(?:Größe|Gr\.)\s*\d{2,3}.*/i,'').trim()}
+  return{brand,size,category};
 }
-function slugToTitle(slug){
-  return decodeURIComponent(slug||'')
-    .replace(/-/g,' ')
-    .replace(/\bca\b/i,'C&A')
-    .replace(/\bgrosse\b/gi,'Größe')
-    .replace(/\bgr\b/gi,'Gr.')
-    .replace(/\s+/g,' ')
-    .trim();
-}
-function parse(text){
-  let u=findUrl(text);
-  if(!u && text.trim().startsWith('http')) u=text.trim();
-  let parsed;
-  try{parsed=new URL(u)}catch{alert('Kein gültiger Link gefunden.');return}
+function parseArticle(text){
+  let u=findUrl(text);if(!u&&text.trim().startsWith('http'))u=text.trim();
+  let parsed;try{parsed=new URL(u)}catch{alert('Kein gültiger Link gefunden.');return}
   const isVinted=/(^|\.)vinted\.(de|com|fr|it|nl|be|es|pt|at)$/i.test(parsed.hostname);
   const match=parsed.pathname.match(/\/items\/(\d+)(?:-([^/?#]+))?/i);
-  $('platform').textContent=isVinted?'Vinted':'Unbekannt';
-  $('itemId').textContent=match?match[1]:'nicht erkannt';
-  $('title').textContent=match&&match[2]?slugToTitle(match[2]):'nicht aus URL ableitbar';
-  $('url').textContent=u;
-  $('openBtn').href=u;
-  result.classList.remove('hidden');
-  result.dataset.record=JSON.stringify({
-    platform:isVinted?'Vinted':'Unbekannt',
-    itemId:match?match[1]:null,
-    title:match&&match[2]?slugToTitle(match[2]):'',
-    url:u,
-    importedAt:new Date().toISOString()
-  });
+  const fallback=match&&match[2]?slugToTitle(match[2]):'';
+  const shared=titleBeforeUrl(text);
+  const visibleTitle=cleanSharedTitle(shared)||fallback||'Vinted-Artikel';
+  const fields=parseProductFields(shared,fallback);
+  currentBase={platform:isVinted?'Vinted':'Unbekannt',itemId:match?match[1]:null,url:u,sharedTitle:visibleTitle,importedAt:new Date().toISOString()};
+  $('sharedTitle').textContent=visibleTitle;$('brand').value=fields.brand;$('size').value=fields.size;$('category').value=fields.category;
+  $('itemId').textContent=currentBase.itemId||'nicht erkannt';$('url').textContent=u;$('openBtn').href=u;
+  if(!$('onlineSince').value)$('onlineSince').value=new Date().toISOString().slice(0,10);
+  editor.classList.remove('hidden');savedBox.classList.add('hidden');
 }
 
-$('parseBtn').onclick=()=>parse(raw.value);
-$('sampleBtn').onclick=()=>{
-  raw.value='https://www.vinted.de/items/8978325221-ca-hose-jogginghose-grosse-86';
-  parse(raw.value);
-};
+$('parseBtn').onclick=()=>parseArticle(raw.value);
+$('sampleBtn').onclick=()=>{raw.value='C&A | Hose | Jogginghose | Größe 86 | Vinted\nhttps://www.vinted.de/items/8978325221-ca-hose-jogginghose-grosse-86';parseArticle(raw.value)};
 $('saveBtn').onclick=()=>{
-  if(!result.dataset.record)return;
-  const rec=JSON.parse(result.dataset.record);
-  const all=JSON.parse(localStorage.getItem('jennysellsPocItems')||'[]');
-  all.unshift(rec);
-  localStorage.setItem('jennysellsPocItems',JSON.stringify(all));
-  $('savedText').textContent=` ${rec.title || rec.itemId} · ${new Date().toLocaleString('de-DE')}`;
+  if(!currentBase)return;
+  const rec={...currentBase,
+    item:{brand:$('brand').value.trim(),category:$('category').value.trim(),size:$('size').value.trim(),condition:$('condition').value,child:$('child').value,purchasePrice:$('purchasePrice').value?Number($('purchasePrice').value):null,purchaseDate:$('purchaseDate').value.trim(),storage:$('storage').value.trim(),note:$('note').value.trim()},
+    offers:[{platform:'Vinted',platformId:currentBase.itemId,url:currentBase.url,status:'online',price:$('offerPrice').value?Number($('offerPrice').value):null,onlineSince:$('onlineSince').value||null}]
+  };
+  const all=JSON.parse(localStorage.getItem('jennysellsItems')||'[]');
+  const idx=all.findIndex(x=>x.itemId&&x.itemId===rec.itemId);if(idx>=0)all[idx]=rec;else all.unshift(rec);
+  localStorage.setItem('jennysellsItems',JSON.stringify(all));
+  $('savedText').textContent=` ${rec.item.brand||''} ${rec.item.category||rec.sharedTitle} · Größe ${rec.item.size||'–'} · ${all.length} Artikel lokal`;
   savedBox.classList.remove('hidden');
 };
 
-const qp=new URLSearchParams(location.search);
-const incoming=[qp.get('title'),qp.get('text'),qp.get('url')].filter(Boolean).join('\n');
-if(incoming){
-  raw.value=incoming;
-  parse(incoming);
-  history.replaceState({},'',location.pathname);
-}
-
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/JennySells-Test/sw.js', {scope:'/JennySells-Test/'})
-    .then(()=> {
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        $('pwaStatus').textContent = 'JennySells läuft als installierte App ✓';
-      } else if (!$('installBtn').classList.contains('hidden')) {
-        // beforeinstallprompt already fired
-      } else {
-        $('pwaStatus').textContent = 'Service Worker aktiv. Falls kein Installieren-Button erscheint: Seite einmal neu laden.';
-      }
-    })
-    .catch(err => {
-      $('pwaStatus').textContent = 'Service Worker Fehler: ' + err.message;
-    });
-}
+const qp=new URLSearchParams(location.search);const incoming=[qp.get('title'),qp.get('text'),qp.get('url')].filter(Boolean).join('\n');if(incoming){raw.value=incoming;parseArticle(incoming);history.replaceState({},'',location.pathname)}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/JennySells-Test/sw.js',{scope:'/JennySells-Test/'}).then(()=>{if(window.matchMedia('(display-mode: standalone)').matches)$('pwaStatus').textContent='JennySells läuft als installierte App ✓';else if($('installBtn').classList.contains('hidden'))$('pwaStatus').textContent='Service Worker aktiv'}).catch(err=>{$('pwaStatus').textContent='Service Worker Fehler: '+err.message})}
 </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
-const CACHE='jennysells-test-v14';
+const CACHE='jennysells-test-v15';
 const ROOT='/JennySells-Test/';
-const ASSETS=[ROOT,ROOT+'index.html',ROOT+'manifest.webmanifest',ROOT+'icon-192.png',ROOT+'icon-512.png',ROOT+'fix-v4.js',ROOT+'ui-v060.js',ROOT+'ui-v070.js',ROOT+'ui-v085.js',ROOT+'assets/logo-00.txt',ROOT+'assets/logo-00-tail.txt',ROOT+'assets/logo-01.txt',ROOT+'assets/logo-02.txt',ROOT+'assets/logo-02-tail.txt',ROOT+'assets/logo-03.txt'];
+const ASSETS=[ROOT,ROOT+'index.html',ROOT+'manifest.webmanifest',ROOT+'icon-192.png',ROOT+'icon-512.png',ROOT+'fix-v4.js',ROOT+'ui-v060.js',ROOT+'ui-v070.js',ROOT+'ui-v086.js',ROOT+'JennySells_Logo_Final.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
@@ -18,7 +18,7 @@ async function pageWithFix(request){
   if(!html.includes('fix-v4.js')) html=html.replace('</body>','<script src="'+ROOT+'fix-v4.js"></script></body>');
   if(!html.includes('ui-v060.js')) html=html.replace('</body>','<script src="'+ROOT+'ui-v060.js"></script></body>');
   if(!html.includes('ui-v070.js')) html=html.replace('</body>','<script src="'+ROOT+'ui-v070.js"></script></body>');
-  if(!html.includes('ui-v085.js')) html=html.replace('</body>','<script src="'+ROOT+'ui-v085.js?v=85"></script></body>');
+  if(!html.includes('ui-v086.js')) html=html.replace('</body>','<script src="'+ROOT+'ui-v086.js?v=86"></script></body>');
   const headers=new Headers(response.headers);
   headers.set('content-type','text/html; charset=utf-8');
   headers.set('cache-control','no-cache, no-store, must-revalidate');

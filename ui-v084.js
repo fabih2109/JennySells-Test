@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.8.4-test';
+  const VERSION='0.8.5-test';
   const ROOT='/JennySells-Test/';
 
   function addStyles(){

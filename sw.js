@@ -1,6 +1,6 @@
-const CACHE='jennysells-test-v5';
+const CACHE='jennysells-test-v6';
 const ROOT='/JennySells-Test/';
-const ASSETS=[ROOT,ROOT+'index.html',ROOT+'manifest.webmanifest',ROOT+'icon-192.png',ROOT+'icon-512.png',ROOT+'fix-v4.js'];
+const ASSETS=[ROOT,ROOT+'index.html',ROOT+'manifest.webmanifest',ROOT+'icon-192.png',ROOT+'icon-512.png',ROOT+'fix-v4.js',ROOT+'ui-v060.js'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
@@ -18,6 +18,7 @@ async function pageWithFix(request){
   if(!response)return new Response('Offline',{status:503});
   let html=await response.text();
   if(!html.includes('fix-v4.js')) html=html.replace('</body>','<script src="'+ROOT+'fix-v4.js"></script></body>');
+  if(!html.includes('ui-v060.js')) html=html.replace('</body>','<script src="'+ROOT+'ui-v060.js"></script></body>');
   const headers=new Headers(response.headers);
   headers.set('content-type','text/html; charset=utf-8');
   headers.set('cache-control','no-cache');

@@ -7,8 +7,8 @@
     const s=document.createElement('style');
     s.id='jennysells-v084-style';
     s.textContent=`
-      .brand{padding:4px 2px 8px!important;min-height:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important}
-      .js-v084-logo{display:block!important;width:min(94vw,440px)!important;max-width:100%!important;height:auto!important;object-fit:contain!important;margin:0 auto!important}
+      .brand{padding:10px 12px 18px!important;min-height:175px!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;overflow:visible!important}
+      .js-v084-logo{display:block!important;width:min(82vw,560px)!important;max-width:100%!important;max-height:none!important;height:auto!important;object-fit:contain!important;margin:0 auto!important}
       .stats{gap:9px!important;margin:9px 0 13px!important}
       .stat{min-height:74px!important;padding:8px 14px 7px!important;border-radius:17px!important}
       .stat b{font-size:22px!important;line-height:1!important;margin:0!important}
@@ -22,7 +22,8 @@
       .period .meta{font-size:10.5px!important;line-height:1.1!important;margin-top:6px!important}
       .period:after{top:8px!important;right:11px!important}
       @media(max-width:380px){
-        .js-v084-logo{width:min(94vw,400px)!important}
+        .brand{min-height:165px!important;padding:9px 10px 16px!important}
+        .js-v084-logo{width:min(84vw,520px)!important}
         .stat{min-height:70px!important;padding:7px 12px!important}
         .period{min-height:92px!important;padding:8px 12px!important}
       }
@@ -54,7 +55,7 @@
     try{
       const files=['logo-00.txt','logo-00-tail.txt','logo-01.txt','logo-02.txt','logo-02-tail.txt','logo-03.txt'];
       const parts=await Promise.all(files.map(async file=>{
-        const r=await fetch(`${ROOT}assets/${file}?v=84`,{cache:'no-store'});
+        const r=await fetch(`${ROOT}assets/${file}?v=85`,{cache:'no-store'});
         if(!r.ok) throw new Error(`${file}: ${r.status}`);
         return r.text();
       }));

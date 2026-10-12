@@ -1,12 +1,16 @@
 (()=>{
-  const VERSION='0.9.0-test';
+  const VERSION='0.9.1-test';
+  const ROOT='/JennySells-Test/';
+  let logoPromise=null;
 
   function addStyles(){
-    if(document.getElementById('jennysells-v090-style')) return;
+    if(document.getElementById('jennysells-v091-style')) return;
     const s=document.createElement('style');
-    s.id='jennysells-v090-style';
+    s.id='jennysells-v091-style';
     s.textContent=`
-      .brand{padding:14px 8px 12px!important;min-height:0!important;height:auto!important;overflow:visible!important;text-align:center!important}
+      .brand{padding:10px 4px 8px!important;min-height:0!important;height:auto!important;overflow:visible!important;text-align:center!important}
+      .brand::before{display:none!important;content:none!important;background:none!important}
+      .brand>*{display:block!important}
       .brand-logo{display:block!important;width:100%!important;max-width:480px!important;height:auto!important;object-fit:contain!important;margin:0 auto!important}
       .stats{gap:9px!important;margin:9px 0 13px!important}
       .stat{min-height:74px!important;padding:8px 14px 7px!important;border-radius:17px!important}
@@ -36,14 +40,52 @@
     if(heading && heading.nextElementSibling!==periods) periods.parentNode.insertBefore(heading,periods);
   }
 
+  async function loadFinalLogo(){
+    if(logoPromise) return logoPromise;
+    logoPromise=(async()=>{
+      const urls=[1,2,3,4,5].map(n=>`${ROOT}assets/logo-final-0${n}.txt?v=91`);
+      const parts=await Promise.all(urls.map(async url=>{
+        const r=await fetch(url,{cache:'no-store'});
+        if(!r.ok) throw new Error('Logo part failed: '+url);
+        return (await r.text()).trim();
+      }));
+      return 'data:image/webp;base64,'+parts.join('');
+    })();
+    return logoPromise;
+  }
+
+  async function applyLogo(){
+    const brand=document.querySelector('.brand');
+    if(!brand || brand.querySelector('.brand-logo')) return;
+    try{
+      const src=await loadFinalLogo();
+      const img=new Image();
+      img.className='brand-logo';
+      img.alt='JennySells – Shopping mit Herz';
+      img.decoding='async';
+      img.onload=()=>brand.replaceChildren(img);
+      img.src=src;
+    }catch(err){
+      console.error('JennySells logo could not be loaded',err);
+    }
+  }
+
   function setVersion(){
     const badge=document.getElementById('appVersion');
     if(badge) badge.textContent='v'+VERSION;
   }
 
-  function run(){addStyles();fixPeriodHeading();setVersion();}
+  function run(){
+    addStyles();
+    fixPeriodHeading();
+    setVersion();
+    applyLogo();
+  }
+
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
-  setTimeout(run,200);setTimeout(run,700);
+  setTimeout(run,200);
+  setTimeout(run,700);
+
   if(typeof refresh==='function'){
     const previousRefresh=refresh;
     refresh=function(){previousRefresh();setTimeout(run,0)};

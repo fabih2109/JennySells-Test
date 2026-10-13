@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.0-test';
+  const VERSION='0.10.1-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=1;
   const IMAGE_STORE='images';
@@ -36,7 +36,7 @@
   }
 
   async function getImage(key){
-    if(!key) return null;
+    if(!key)return null;
     const db=await openDb();
     return new Promise((resolve,reject)=>{
       const tx=db.transaction(IMAGE_STORE,'readonly');
@@ -71,6 +71,7 @@
       .jsImportStep{background:#faf6fb;border:1px solid #eee4ed;border-radius:17px;padding:12px;margin:9px 0}.jsImportStep h3{font:800 15px Georgia,serif;margin:0 0 7px}.jsImportStep p{font-size:10.5px;color:#817486;line-height:1.4;margin:4px 0 9px}
       .jsImportBtn{width:100%;border:0;border-radius:13px;padding:12px;background:#f0e3f5;color:#704289;font-weight:800;text-align:center}.jsImportBtn.primary{background:#71389b;color:#fff}.jsImportBtn:disabled{opacity:.45}
       .jsImportUrl{font-size:10px;word-break:break-all;background:#fff;border:1px solid #eadfee;border-radius:12px;padding:9px;margin-top:8px;color:#62566a}
+      .jsPlatform{display:inline-flex;align-items:center;padding:4px 7px;border-radius:99px;background:#f0e3f5;color:#704289;font-size:9px;font-weight:800;margin-bottom:6px}
       .jsShots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.jsShot{position:relative;border:2px solid #eadfee;border-radius:15px;padding:6px;background:#fff}.jsShot.selected{border-color:#71389b;box-shadow:0 0 0 2px #eadcf2}.jsShot img{display:block;width:100%;aspect-ratio:.9;object-fit:cover;border-radius:10px;background:#f4eef5}.jsShot label{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;margin:7px 2px 1px;color:#5e4d64}.jsShot input{accent-color:#71389b}.jsShot small{display:block;color:#8a7c8e;font-size:9px;margin:2px}
       .jsImportStatus{font-size:10.5px;border-radius:12px;padding:9px;background:#edf8f1;color:#277147;margin-top:8px}.jsImportStatus.warn{background:#fff4e5;color:#8d621f}
       .jsCoverPreview{display:none;align-items:center;gap:10px;background:#faf6fb;border:1px solid #eee4ed;border-radius:14px;padding:8px;margin:0 0 10px}.jsCoverPreview.show{display:flex}.jsCoverPreview img{width:66px;height:74px;object-fit:cover;border-radius:10px}.jsCoverPreview div{font-size:10px;color:#817486}.jsCoverPreview b{display:block;color:#4f3f55;font-size:11px;margin-bottom:3px}
@@ -81,37 +82,37 @@
   }
 
   function ensureUi(){
-    if(!q('#vintedImportLaunch')){
+    if(!q('#marketImportLaunch')){
+      q('#vintedImportLaunch')?.remove();
       const hero=q('#home .hero');
       if(hero){
         const b=document.createElement('button');
-        b.id='vintedImportLaunch';
+        b.id='marketImportLaunch';
         b.className='jsImportLaunch';
-        b.innerHTML='<b>📷 Von Vinted importieren</b><span>Link übernehmen + mehrere Screenshots auswerten</span>';
+        b.innerHTML='<b>📷 Verkaufsartikel importieren</b><span>Link übernehmen + mehrere Screenshots auswerten</span>';
         hero.insertAdjacentElement('afterend',b);
         b.onclick=openImport;
       }
     }
-    if(!q('#jsImportBg')){
-      const m=document.createElement('div');
-      m.id='jsImportBg';
-      m.className='jsImportBg';
-      m.innerHTML=`<div class="jsImportSheet">
-        <div class="jsImportHead"><h2>Vinted importieren</h2><button class="jsImportClose" id="jsImportClose">×</button></div>
-        <div class="jsImportLead">Mehrere Screenshots dürfen als Importquelle dienen. Für den Artikel wird am Ende genau ein Titelbild gespeichert; die übrigen Bildausschnitte werden verworfen.</div>
-        <div class="jsImportStep"><h3>1 · Vinted-Link</h3><p>Link in Vinted kopieren und hier direkt aus der Zwischenablage übernehmen.</p><button class="jsImportBtn" id="jsReadClipboard">Link aus Zwischenablage übernehmen</button><div class="jsImportUrl" id="jsImportUrl">Noch kein Link übernommen.</div></div>
-        <div class="jsImportStep"><h3>2 · Screenshots</h3><p>Wähle 1 bis mehrere Screenshots desselben Vinted-Artikels. Alle bleiben während des Imports als Informationsquelle verfügbar.</p><input id="jsShotInput" type="file" accept="image/*" multiple hidden><button class="jsImportBtn" id="jsChooseShots">Screenshots auswählen</button><div id="jsShotStatus" class="jsImportStatus warn">Noch keine Screenshots ausgewählt.</div><div class="jsShots" id="jsShots"></div></div>
-        <div class="jsImportStep"><h3>3 · Titelbild auswählen</h3><p>Aus jedem Screenshot wird ein temporärer Bildausschnitt erzeugt. Wähle genau einen als Titelbild. Nur dieser wird dauerhaft in JennySells gespeichert.</p><div id="jsCoverHint" class="jsImportStatus warn">Zuerst Screenshots auswählen.</div></div>
-        <button class="jsImportBtn primary" id="jsContinueImport" disabled>Mit ausgewähltem Titelbild weiter</button>
-      </div>`;
-      document.body.appendChild(m);
-      q('#jsImportClose').onclick=closeImport;
-      m.onclick=e=>{if(e.target===m)closeImport()};
-      q('#jsReadClipboard').onclick=readClipboard;
-      q('#jsChooseShots').onclick=()=>q('#jsShotInput').click();
-      q('#jsShotInput').onchange=e=>handleFiles(e.target.files);
-      q('#jsContinueImport').onclick=continueImport;
-    }
+    q('#jsImportBg')?.remove();
+    const m=document.createElement('div');
+    m.id='jsImportBg';
+    m.className='jsImportBg';
+    m.innerHTML=`<div class="jsImportSheet">
+      <div class="jsImportHead"><h2>Artikel importieren</h2><button class="jsImportClose" id="jsImportClose">×</button></div>
+      <div class="jsImportLead">Der Ablauf ist auf iPhone und Android bewusst gleich: Angebots-Link kopieren, Screenshots auswählen, genau ein Titelbild festlegen. Unterstützt werden Vinted, eBay, Kleinanzeigen und grundsätzlich auch andere Web-Links.</div>
+      <div class="jsImportStep"><h3>1 · Angebots-Link</h3><p>Kopiere den Link in der Verkaufsplattform und übernimm ihn hier direkt aus der Zwischenablage.</p><button class="jsImportBtn" id="jsReadClipboard">Link aus Zwischenablage übernehmen</button><div class="jsImportUrl" id="jsImportUrl">Noch kein Link übernommen.</div></div>
+      <div class="jsImportStep"><h3>2 · Screenshots</h3><p>Wähle 1 bis mehrere Screenshots desselben Artikels. Alle bleiben während des Imports als Informationsquelle verfügbar.</p><input id="jsShotInput" type="file" accept="image/*" multiple hidden><button class="jsImportBtn" id="jsChooseShots">Screenshots auswählen</button><div id="jsShotStatus" class="jsImportStatus warn">Noch keine Screenshots ausgewählt.</div><div class="jsShots" id="jsShots"></div></div>
+      <div class="jsImportStep"><h3>3 · Titelbild auswählen</h3><p>Aus jedem Screenshot wird ein temporärer Bildausschnitt erzeugt. Wähle genau einen als Titelbild. Nur dieser wird dauerhaft in JennySells gespeichert.</p><div id="jsCoverHint" class="jsImportStatus warn">Zuerst Screenshots auswählen.</div></div>
+      <button class="jsImportBtn primary" id="jsContinueImport" disabled>Mit ausgewähltem Titelbild weiter</button>
+    </div>`;
+    document.body.appendChild(m);
+    q('#jsImportClose').onclick=closeImport;
+    m.onclick=e=>{if(e.target===m)closeImport()};
+    q('#jsReadClipboard').onclick=readClipboard;
+    q('#jsChooseShots').onclick=()=>q('#jsShotInput').click();
+    q('#jsShotInput').onchange=e=>handleFiles(e.target.files);
+    q('#jsContinueImport').onclick=continueImport;
     ensureEditorCover();
   }
 
@@ -131,39 +132,81 @@
     importCandidates.forEach(c=>{if(c.url)URL.revokeObjectURL(c.url)});
     importCandidates=[];
     selectedCandidate=0;
-    q('#jsShotInput').value='';
-    q('#jsShots').innerHTML='';
-    q('#jsShotStatus').className='jsImportStatus warn';
-    q('#jsShotStatus').textContent='Noch keine Screenshots ausgewählt.';
-    q('#jsCoverHint').className='jsImportStatus warn';
-    q('#jsCoverHint').textContent='Zuerst Screenshots auswählen.';
-    q('#jsContinueImport').disabled=true;
+    if(q('#jsShotInput'))q('#jsShotInput').value='';
+    if(q('#jsShots'))q('#jsShots').innerHTML='';
+    if(q('#jsShotStatus')){q('#jsShotStatus').className='jsImportStatus warn';q('#jsShotStatus').textContent='Noch keine Screenshots ausgewählt.'}
+    if(q('#jsCoverHint')){q('#jsCoverHint').className='jsImportStatus warn';q('#jsCoverHint').textContent='Zuerst Screenshots auswählen.'}
+    if(q('#jsContinueImport'))q('#jsContinueImport').disabled=true;
   }
 
   function openImport(){
     resetImport();
     q('#jsImportUrl').textContent='Noch kein Link übernommen.';
     q('#jsImportUrl').dataset.url='';
+    q('#jsImportUrl').dataset.source='';
     q('#jsImportBg').classList.add('show');
   }
+  function closeImport(){q('#jsImportBg')?.classList.remove('show')}
 
-  function closeImport(){q('#jsImportBg').classList.remove('show')}
+  function firstUrl(text=''){
+    const m=String(text).match(/https?:\/\/[^\s<>"']+/i);
+    return m?m[0].replace(/[),.;!?]+$/,''):'';
+  }
 
-  function findVintedUrl(text=''){
-    const m=String(text).match(/https?:\/\/(?:www\.)?vinted\.[^\s/]+\/items\/\d+[^\s]*/i);
-    return m?m[0].replace(/[),.;]+$/,''):'';
+  function humanizeSlug(s=''){
+    try{s=decodeURIComponent(s)}catch{}
+    return s.replace(/\.(html?|php)$/i,'').replace(/[-_+]+/g,' ').replace(/\s+/g,' ').trim();
+  }
+
+  function detectMarketplace(url=''){
+    let u;
+    try{u=new URL(url)}catch{return {source:'Privat',label:'Web-Link',id:'',title:'',size:'',brand:''}}
+    const host=u.hostname.toLowerCase().replace(/^www\./,'');
+    const path=u.pathname;
+    let source='Privat',label=host,id='',slug='';
+
+    if(host.includes('vinted.')){
+      source='Vinted';label='Vinted';
+      const m=path.match(/\/items\/(\d+)-?([^/?#]*)/i);
+      if(m){id=m[1]||'';slug=m[2]||''}
+    }else if(host==='kleinanzeigen.de'||host.endsWith('.kleinanzeigen.de')||host.includes('ebay-kleinanzeigen.')){
+      source='Kleinanzeigen';label='Kleinanzeigen';
+      const m=path.match(/\/s-anzeige\/([^/]+)\/(\d+(?:-\d+)*)/i);
+      if(m){slug=m[1]||'';id=m[2]||''}
+      else{const parts=path.split('/').filter(Boolean);slug=parts.find((p,i)=>parts[i-1]==='s-anzeige')||''}
+    }else if(host.includes('ebay.')){
+      source='eBay';label='eBay';
+      const m=path.match(/\/itm\/(?:([^/]+)\/)?(\d{8,})/i);
+      if(m){slug=m[1]||'';id=m[2]||''}
+      else{const parts=path.split('/').filter(Boolean);const itm=parts.indexOf('itm');if(itm>=0){slug=parts[itm+1]&&!/^\d+$/.test(parts[itm+1])?parts[itm+1]:'';id=parts.find((p,i)=>i>itm&&/^\d{8,}$/.test(p))||''}}
+    }else{
+      const parts=path.split('/').filter(Boolean);
+      slug=[...parts].reverse().find(p=>!/^\d+$/.test(p)&&p.length>2)||'';
+    }
+
+    const title=humanizeSlug(slug);
+    const size=(title.match(/(?:größe|gr\.?|size)\s*([0-9]{2,3}|[xsml]{1,3})\b/i)||[])[1]||'';
+    let brand='';
+    if(source==='Vinted'&&title){
+      const first=title.split(/\s+/)[0]||'';
+      brand=/^ca$/i.test(first)?'C&A':first;
+    }
+    return {source,label,id,title,size,brand,host};
   }
 
   async function readClipboard(){
     const out=q('#jsImportUrl');
     try{
       const text=await navigator.clipboard.readText();
-      const url=findVintedUrl(text);
-      if(!url) throw new Error('Kein Vinted-Link in der Zwischenablage gefunden.');
-      out.textContent=url;out.dataset.url=url;
+      const url=firstUrl(text);
+      if(!url)throw new Error('Kein Web-Link in der Zwischenablage gefunden.');
+      const meta=detectMarketplace(url);
+      out.innerHTML=`<span class="jsPlatform">${meta.label}</span><br>${url}`;
+      out.dataset.url=url;
+      out.dataset.source=meta.source;
     }catch(err){
-      out.textContent=err.message||'Zwischenablage konnte nicht gelesen werden. Link bitte erneut in Vinted kopieren.';
-      out.dataset.url='';
+      out.textContent=err.message||'Zwischenablage konnte nicht gelesen werden. Link bitte erneut kopieren.';
+      out.dataset.url='';out.dataset.source='';
     }
   }
 
@@ -190,7 +233,7 @@
     const ctx=canvas.getContext('2d',{alpha:false});
     ctx.drawImage(img,0,y,cropW,cropH,0,0,canvas.width,canvas.height);
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.88));
-    if(!blob) throw new Error('Bildausschnitt konnte nicht erstellt werden.');
+    if(!blob)throw new Error('Bildausschnitt konnte nicht erstellt werden.');
     return {index,blob,url:URL.createObjectURL(blob),name:file.name||`Screenshot ${index+1}`};
   }
 
@@ -204,7 +247,7 @@
     status.textContent=`${importFiles.length} Screenshot${importFiles.length===1?'':'s'} ausgewählt · Bildausschnitte werden vorbereitet …`;
     q('#jsChooseShots').disabled=true;
     try{
-      for(let i=0;i<importFiles.length;i++) importCandidates.push(await makeCandidate(importFiles[i],i));
+      for(let i=0;i<importFiles.length;i++)importCandidates.push(await makeCandidate(importFiles[i],i));
       selectedCandidate=0;
       renderCandidates();
       status.textContent=`${importFiles.length} Screenshot${importFiles.length===1?'':'s'} stehen für die Datenerkennung bereit.`;
@@ -223,27 +266,17 @@
     qa('input[name="jsCover"]').forEach(r=>r.onchange=()=>{selectedCandidate=Number(r.value);renderCandidates()});
   }
 
-  function parseUrl(url){
-    const idm=url.match(/\/items\/(\d+)-?([^/?#]*)/i);
-    const slug=idm&&idm[2]?decodeURIComponent(idm[2]).replace(/-/g,' ').replace(/\bgrosse\b/gi,'Größe'):'';
-    const size=(slug.match(/(?:Größe|Gr\.?)\s*(\d{2,3})/i)||[])[1]||'';
-    const words=slug.trim().split(/\s+/).filter(Boolean);
-    let brand='';
-    if(words.length) brand=words[0].replace(/^ca$/i,'C&A');
-    return {id:idm?idm[1]:'',slug,size,brand};
-  }
-
   async function continueImport(){
     if(!importCandidates.length)return;
     const chosen=importCandidates[selectedCandidate]||importCandidates[0];
     const url=q('#jsImportUrl').dataset.url||'';
-    const parsed=parseUrl(url);
+    const meta=detectMarketplace(url);
     const draft=typeof blank==='function'?blank():{id:Date.now().toString(36),createdAt:new Date().toISOString()};
-    draft.source='Vinted';
+    draft.source=meta.source;
     draft.url=url;
-    draft.title=parsed.slug||'Vinted-Artikel';
-    draft.brand=parsed.brand;
-    draft.size=parsed.size;
+    draft.title=meta.title||`${meta.label}-Artikel`;
+    draft.brand=meta.brand||'';
+    draft.size=meta.size||'';
     draft.onlineSince=typeof today==='function'?today():new Date().toISOString().slice(0,10);
     const key='cover:'+draft.id;
     q('#jsContinueImport').disabled=true;
@@ -254,10 +287,10 @@
       pendingItemId=draft.id;
       draft.coverImageKey=key;
       closeImport();
-      if(typeof openEditor==='function') openEditor(draft,`Vinted-Import · ${importFiles.length} Screenshot${importFiles.length===1?'':'s'} als Datenquelle · genau 1 Titelbild wird gespeichert${parsed.id?' · Artikel-ID '+parsed.id:''}`);
+      const info=[`${meta.label}-Import`,`${importFiles.length} Screenshot${importFiles.length===1?'':'s'} als Datenquelle`,'genau 1 Titelbild wird gespeichert',meta.id?`Angebots-ID ${meta.id}`:''].filter(Boolean).join(' · ');
+      if(typeof openEditor==='function')openEditor(draft,info);
     }catch(err){
-      q('#jsCoverHint').className='jsImportStatus warn';
-      q('#jsCoverHint').textContent='Titelbild konnte nicht lokal gespeichert werden.';
+      alert(err.message||'Titelbild konnte nicht gespeichert werden.');
     }finally{
       q('#jsContinueImport').disabled=false;
       q('#jsContinueImport').textContent='Mit ausgewähltem Titelbild weiter';
@@ -267,75 +300,81 @@
   async function showCoverInEditor(item){
     ensureEditorCover();
     const box=q('#jsEditorCover'),img=box?.querySelector('img');
-    if(!box||!img){return}
-    const key=item?.coverImageKey || (item?.id===pendingItemId?pendingCover:null);
+    if(!box||!img)return;
+    const key=item?.coverImageKey||(item?.id===pendingItemId?pendingCover:null);
     if(!key){box.classList.remove('show');img.removeAttribute('src');return}
     try{
       const blob=await getImage(key);
       if(!blob){box.classList.remove('show');return}
-      const u=URL.createObjectURL(blob);
-      img.onload=()=>URL.revokeObjectURL(u);
-      img.src=u;box.classList.add('show');
+      const old=objectUrls.get(img);if(old)URL.revokeObjectURL(old);
+      const u=URL.createObjectURL(blob);objectUrls.set(img,u);img.src=u;box.classList.add('show');
     }catch{box.classList.remove('show')}
   }
 
   async function applyCovers(){
     if(typeof items==='undefined')return;
-    for(const item of items){
-      if(!item.coverImageKey)continue;
-      const row=q(`.itemOpen[data-id="${CSS.escape(item.id)}"]`);
-      const thumb=row?.querySelector('.thumb');
-      if(!thumb)continue;
+    const rows=qa('.itemOpen');
+    for(const row of rows){
+      const id=row.dataset.id;
+      const item=items.find(x=>x.id===id);
+      const thumb=row.querySelector('.thumb');
+      if(!item?.coverImageKey||!thumb)continue;
       try{
-        let u=objectUrls.get(item.coverImageKey);
-        if(!u){const blob=await getImage(item.coverImageKey);if(!blob)continue;u=URL.createObjectURL(blob);objectUrls.set(item.coverImageKey,u)}
-        thumb.textContent='';thumb.classList.add('hasCover');thumb.style.backgroundImage=`url("${u}")`;
+        const blob=await getImage(item.coverImageKey);
+        if(!blob)continue;
+        const old=objectUrls.get(thumb);if(old)URL.revokeObjectURL(old);
+        const u=URL.createObjectURL(blob);objectUrls.set(thumb,u);
+        thumb.classList.add('hasCover');thumb.style.backgroundImage=`url("${u}")`;thumb.textContent='';
       }catch{}
     }
   }
 
   function patchCore(){
-    if(typeof collect==='function' && !collect.__v100){
+    if(typeof collect==='function'&&!collect.__v100){
       const previous=collect;
       const patched=function(){
         const r=previous();
-        if(r.id===pendingItemId && pendingCover) r.coverImageKey=pendingCover;
+        if(r.id===pendingItemId&&pendingCover)r.coverImageKey=pendingCover;
         return r;
       };
       patched.__v100=true;collect=patched;
     }
-    if(typeof openEditor==='function' && !openEditor.__v100){
+    if(typeof openEditor==='function'&&!openEditor.__v100){
       const previous=openEditor;
-      const patched=function(i,note){const out=previous(i,note);setTimeout(()=>showCoverInEditor(i),0);return out};
+      const patched=function(item,note=''){
+        const result=previous(item,note);
+        setTimeout(()=>showCoverInEditor(item),0);
+        return result;
+      };
       patched.__v100=true;openEditor=patched;
     }
-    if(typeof refresh==='function' && !refresh.__v100){
-      const previous=refresh;
-      const patched=function(){const out=previous();setTimeout(applyCovers,0);return out};
-      patched.__v100=true;refresh=patched;
-    }
     const saveBtn=q('#saveItem');
-    if(saveBtn && !saveBtn.dataset.v100){
+    if(saveBtn&&!saveBtn.dataset.v100){
       saveBtn.dataset.v100='1';
       const previous=saveBtn.onclick;
       saveBtn.onclick=e=>{
         const id=q('#editId')?.value;
-        if(previous) previous.call(saveBtn,e);
+        if(previous)previous.call(saveBtn,e);
         if(id===pendingItemId){pendingItemId=null;pendingCover=null}
         setTimeout(applyCovers,0);
       };
     }
     const delBtn=q('#deleteItem');
-    if(delBtn && !delBtn.dataset.v100){
+    if(delBtn&&!delBtn.dataset.v100){
       delBtn.dataset.v100='1';
       const previous=delBtn.onclick;
       delBtn.onclick=e=>{
         const id=q('#editId')?.value;
         const item=typeof items!=='undefined'?items.find(x=>x.id===id):null;
-        const key=item?.coverImageKey;
-        if(previous) previous.call(delBtn,e);
-        if(key) deleteImage(key).catch(()=>{});
+        if(item?.coverImageKey)deleteImage(item.coverImageKey).catch(()=>{});
+        if(previous)previous.call(delBtn,e);
+        setTimeout(applyCovers,0);
       };
+    }
+    if(typeof refresh==='function'&&!refresh.__v100){
+      const previous=refresh;
+      const patched=function(){const r=previous();setTimeout(applyCovers,0);return r};
+      patched.__v100=true;refresh=patched;
     }
   }
 
@@ -343,5 +382,5 @@
 
   function run(){addStyles();ensureUi();patchCore();setVersion();setTimeout(applyCovers,0)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
-  setTimeout(run,250);setTimeout(run,900);
+  setTimeout(run,250);
 })();

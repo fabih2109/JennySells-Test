@@ -40,6 +40,36 @@
     if(heading && heading.nextElementSibling!==periods) periods.parentNode.insertBefore(heading,periods);
   }
 
+  function ensureImportLaunch(){
+    if(document.getElementById('marketImportLaunch')) return;
+    const home=document.getElementById('home');
+    if(!home) return;
+    const anchor=home.querySelector('.sec');
+    if(!anchor) return;
+    const b=document.createElement('button');
+    b.id='marketImportLaunch';
+    b.className='jsImportLaunch';
+    b.innerHTML='<b>📷 Verkaufsartikel importieren</b><span>Link übernehmen + mehrere Screenshots auswerten</span>';
+    b.onclick=()=>{
+      const bg=document.getElementById('jsImportBg');
+      if(!bg) return;
+      const input=document.getElementById('jsShotInput');
+      const shots=document.getElementById('jsShots');
+      const status=document.getElementById('jsShotStatus');
+      const cover=document.getElementById('jsCoverHint');
+      const next=document.getElementById('jsContinueImport');
+      const url=document.getElementById('jsImportUrl');
+      if(input) input.value='';
+      if(shots) shots.innerHTML='';
+      if(status){status.className='jsImportStatus warn';status.textContent='Noch keine Screenshots ausgewählt.';}
+      if(cover){cover.className='jsImportStatus warn';cover.textContent='Zuerst Screenshots auswählen.';}
+      if(next){next.disabled=true;next.textContent='Mit ausgewähltem Titelbild weiter';}
+      if(url){url.textContent='Noch kein Link übernommen.';url.dataset.url='';url.dataset.source='';}
+      bg.classList.add('show');
+    };
+    home.insertBefore(b,anchor);
+  }
+
   async function loadFinalLogo(){
     if(logoPromise) return logoPromise;
     logoPromise=(async()=>{
@@ -98,11 +128,13 @@
     fixPeriodHeading();
     setVersion();
     applyLogo();
+    ensureImportLaunch();
   }
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
   setTimeout(run,200);
   setTimeout(run,700);
+  setTimeout(ensureImportLaunch,1000);
 
   if(typeof refresh==='function'){
     const previousRefresh=refresh;

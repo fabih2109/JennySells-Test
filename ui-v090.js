@@ -70,9 +70,27 @@
     }
   }
 
+  function versionParts(v=''){
+    const m=String(v).match(/(\d+)\.(\d+)\.(\d+)/);
+    return m?[Number(m[1]),Number(m[2]),Number(m[3])]:null;
+  }
+
+  function compareVersions(a,b){
+    for(let i=0;i<3;i++){
+      if(a[i]>b[i]) return 1;
+      if(a[i]<b[i]) return -1;
+    }
+    return 0;
+  }
+
   function setVersion(){
     const badge=document.getElementById('appVersion');
-    if(badge) badge.textContent='v'+VERSION;
+    if(!badge) return;
+    const current=versionParts(badge.textContent);
+    const legacy=versionParts(VERSION);
+    // This legacy UI layer must never overwrite a newer UI layer's version.
+    if(current && legacy && compareVersions(current,legacy)>0) return;
+    badge.textContent='v'+VERSION;
   }
 
   function run(){

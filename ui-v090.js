@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.5-test';
+  const VERSION='0.10.6-test';
   const ROOT='/JennySells-Test/';
   let logoPromise=null;
 
@@ -72,12 +72,7 @@
 
   async function loadFinalLogo(){
     if(logoPromise) return logoPromise;
-    logoPromise=(async()=>{
-      const url=`${ROOT}JennySells_Logo_Final_17-10-2026.b64?v=20261017b`;
-      const r=await fetch(url,{cache:'no-store'});
-      if(!r.ok) throw new Error('Logo source failed: '+url);
-      return 'data:image/png;base64,'+(await r.text()).trim();
-    })();
+    logoPromise=Promise.resolve(`${ROOT}JennySells_Logo_Final_17-10-2026_v2.png?v=20261017v2`);
     return logoPromise;
   }
 
@@ -133,6 +128,8 @@
   setTimeout(run,200);
   setTimeout(run,700);
   setTimeout(run,1100);
+  setTimeout(run,1800);
+  setTimeout(run,3000);
   setTimeout(ensureImportLaunch,1300);
 
   if(typeof refresh==='function'){

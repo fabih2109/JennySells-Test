@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v26';
+const CACHE='jennysells-test-v27';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,
@@ -6,6 +6,8 @@ const ASSETS=[
   ROOT+'manifest.webmanifest',
   ROOT+'icon-192.png',
   ROOT+'icon-512.png',
+  ROOT+'icon-maskable-512.png',
+  ROOT+'apple-touch-icon.png',
   ROOT+'fix-v4.js',
   ROOT+'ui-v060.js',
   ROOT+'ui-v070.js',

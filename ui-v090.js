@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.9.1-test';
+  const VERSION='0.10.5-test';
   const ROOT='/JennySells-Test/';
   let logoPromise=null;
 
@@ -72,21 +72,29 @@
 
   async function loadFinalLogo(){
     if(logoPromise) return logoPromise;
-    logoPromise=Promise.resolve(`${ROOT}JennySells_Logo_Final_17-10-2026.png?v=20261017`);
+    logoPromise=(async()=>{
+      const url=`${ROOT}JennySells_Logo_Final_17-10-2026.b64?v=20261017b`;
+      const r=await fetch(url,{cache:'no-store'});
+      if(!r.ok) throw new Error('Logo source failed: '+url);
+      return 'data:image/png;base64,'+(await r.text()).trim();
+    })();
     return logoPromise;
   }
 
   async function applyLogo(){
     const brand=document.querySelector('.brand');
-    if(!brand || brand.querySelector('.brand-logo')) return;
+    if(!brand) return;
     try{
       const src=await loadFinalLogo();
-      const img=new Image();
-      img.className='brand-logo';
-      img.alt='JennySells – Shopping mit Herz';
-      img.decoding='async';
-      img.onload=()=>brand.replaceChildren(img);
-      img.src=src;
+      let img=brand.querySelector('.brand-logo');
+      if(!img){
+        img=new Image();
+        img.className='brand-logo';
+        img.alt='JennySells – Shopping mit Herz';
+        img.decoding='async';
+        img.onload=()=>brand.replaceChildren(img);
+      }
+      if(img.src!==src) img.src=src;
     }catch(err){
       console.error('JennySells logo could not be loaded',err);
     }
@@ -107,12 +115,10 @@
 
   function setVersion(){
     const badge=document.getElementById('appVersion');
-    if(!badge) return;
-    const current=versionParts(badge.textContent);
-    const legacy=versionParts(VERSION);
-    // This legacy UI layer must never overwrite a newer UI layer's version.
-    if(current && legacy && compareVersions(current,legacy)>0) return;
-    badge.textContent='v'+VERSION;
+    const current=badge?versionParts(badge.textContent):null;
+    const target=versionParts(VERSION);
+    if(badge && (!current || !target || compareVersions(current,target)<=0)) badge.textContent='v'+VERSION;
+    document.documentElement.dataset.jennysellsVersion=VERSION;
   }
 
   function run(){
@@ -126,7 +132,8 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
   setTimeout(run,200);
   setTimeout(run,700);
-  setTimeout(ensureImportLaunch,1000);
+  setTimeout(run,1100);
+  setTimeout(ensureImportLaunch,1300);
 
   if(typeof refresh==='function'){
     const previousRefresh=refresh;

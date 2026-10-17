@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v22';
+const CACHE='jennysells-test-v23';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,
@@ -12,6 +12,7 @@ const ASSETS=[
   ROOT+'ui-v090.js',
   ROOT+'ui-v100.js',
   ROOT+'ui-v102.js',
+  ROOT+'ui-v104.js',
   ROOT+'logo-v090.css',
   ROOT+'assets/logo-final-01.txt',
   ROOT+'assets/logo-final-02.txt',

@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v24';
+const CACHE='jennysells-test-v25';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,
@@ -14,7 +14,7 @@ const ASSETS=[
   ROOT+'ui-v102.js',
   ROOT+'ui-v104.js',
   ROOT+'logo-v090.css',
-  ROOT+'JennySells_Logo_Final_17-10-2026.png'
+  ROOT+'JennySells_Logo_Final_17-10-2026.b64'
 ];
 
 self.addEventListener('install',event=>{

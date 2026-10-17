@@ -72,15 +72,7 @@
 
   async function loadFinalLogo(){
     if(logoPromise) return logoPromise;
-    logoPromise=(async()=>{
-      const urls=[1,2,3,4,5].map(n=>`${ROOT}assets/logo-final-0${n}.txt?v=91`);
-      const parts=await Promise.all(urls.map(async url=>{
-        const r=await fetch(url,{cache:'no-store'});
-        if(!r.ok) throw new Error('Logo part failed: '+url);
-        return (await r.text()).trim();
-      }));
-      return 'data:image/webp;base64,'+parts.join('');
-    })();
+    logoPromise=Promise.resolve(`${ROOT}JennySells_Logo_Final_17-10-2026.png?v=20261017`);
     return logoPromise;
   }
 

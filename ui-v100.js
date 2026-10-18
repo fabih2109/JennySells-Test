@@ -1,7 +1,7 @@
 (()=>{
-  const VERSION='0.10.16-test';
+  const VERSION='0.11.0-test';
   const DB_NAME='JennySellsDB';
-  const DB_VERSION=1;
+  const DB_VERSION=2;
   const IMAGE_STORE='images';
   let importFiles=[];
   let importCandidates=[];
@@ -355,7 +355,7 @@
       saveBtn.onclick=e=>{
         const id=q('#editId')?.value;
         if(previous)previous.call(saveBtn,e);
-        if(id===pendingItemId){pendingItemId=null;pendingCover=null}
+        if(id===pendingItemId&&!q('#editorBg')?.classList.contains('show')){pendingItemId=null;pendingCover=null}
         setTimeout(applyCovers,0);
       };
     }
@@ -367,7 +367,7 @@
         const id=q('#editId')?.value;
         const item=typeof items!=='undefined'?items.find(x=>x.id===id):null;
         if(previous)previous.call(delBtn,e);
-        if(item?.coverImageKey)deleteImage(item.coverImageKey).catch(()=>{});
+        if(item?.coverImageKey){const saved=window.JennySellsData?.whenSaved?.()||Promise.resolve();saved.then(()=>deleteImage(item.coverImageKey)).catch(err=>console.error('Cover deletion skipped, article save failed:',err));}
         setTimeout(applyCovers,0);
       };
     }

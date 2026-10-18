@@ -1,7 +1,7 @@
 (()=>{
-  const VERSION='0.10.16-test';
+  const VERSION='0.11.0-test';
   const DB_NAME='JennySellsDB';
-  const DB_VERSION=1;
+  const DB_VERSION=2;
   const IMAGE_STORE='images';
   const q=s=>document.querySelector(s);
 

@@ -1,0 +1,118 @@
+/* JennySells v0.11.0 – settings, safety dialogs and Jennylicious-inspired color themes. */
+:root{
+ --js-custom-accent:#71389b;
+ --js-custom-dark:#54227d;
+ --js-custom-soft:#f0e3f5;
+ --js-custom-bg:#f9e9fc;
+ --js-custom-bg2:#fff8fc;
+}
+#jsDataLoading{
+ position:fixed;z-index:900;inset:0;display:flex;align-items:center;justify-content:center;
+ background:rgba(251,242,253,.98);color:#5b257b;font-weight:750;font-size:15px;text-align:center;padding:26px;
+}
+.jsDataCard{
+ background:rgba(255,255,255,.95);
+ border:1px solid #eee0f2;border-radius:23px;
+ margin:13px 0;padding:18px 15px;
+ box-shadow:0 6px 20px rgba(85,45,114,.075);
+}
+.jsDataCard h3{font:800 21px Georgia,serif;margin:0 0 8px;color:var(--js-custom-dark)}
+.jsDataCard p{font-size:12px;color:#7a7184;line-height:1.45;margin:0 0 14px}
+.jsThemeChoices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.jsThemeChoices button{
+ min-width:0;display:flex;align-items:center;flex-direction:column;gap:5px;
+ border:1px solid #ece0ef;border-radius:13px;background:#fff;padding:8px 2px;
+ color:#52445b;font-size:10.5px;font-weight:700;
+}
+.jsThemeChoices button.selected{outline:2px solid var(--js-custom-accent);outline-offset:-2px}
+.jsThemeChoices i{
+ display:block;width:30px;height:30px;border:5px solid var(--theme-light);
+ border-radius:100px;background:var(--theme-color);box-shadow:0 2px 7px #0002;
+}
+.jsCategoryList{max-height:295px;overflow:auto;border-radius:14px;border:1px solid #f2eaf5}
+.jsCategoryRow{
+ display:grid;grid-template-columns:minmax(0,1fr) 57px 68px 27px;
+ gap:5px;align-items:center;padding:9px 6px;background:#fff;border-bottom:1px solid #f2e9f5;
+}
+.jsCategoryRow:last-child{border-bottom:0}
+.jsCategoryRow b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#30233e}
+.jsCategoryRow span{font-size:10px;color:#8e8295;text-align:right;white-space:nowrap}
+.jsCategoryRow button{border:0;border-radius:9px;padding:7px 3px;background:var(--js-custom-soft);color:var(--js-custom-dark);font-size:10px}
+.jsCategoryRow button:last-child{color:#ba4558;background:#ffedf1;font-size:16px}
+.jsAddCategory{display:flex;gap:7px;margin-top:12px}
+.jsAddCategory input{width:100%;min-width:0;border:1px solid #e4d7eb;border-radius:12px;padding:11px;font-size:13px}
+.jsAddCategory button{border:0;border-radius:12px;background:var(--js-custom-accent);color:#fff;font-weight:800;padding:0 12px;font-size:12px}
+.jsCategoryHint{font-size:10px;line-height:1.35;color:#6f7564;margin:5px 0 0}
+.jsCategoryHint.warn{color:#b36d20}
+.jsDataAction{
+ display:block;width:100%;margin:8px 0;border:1px solid #eadced;border-radius:14px;
+ text-align:left;background:#f8f2fc;color:var(--js-custom-dark);
+ padding:12px 13px;font-weight:800;font-size:13px;
+}
+.jsDataAction.primary{background:var(--js-custom-accent);border-color:var(--js-custom-accent);color:#fff;text-align:center}
+.jsDataStatus{font-size:11px;line-height:1.45;background:#e8f7ee;color:#326549;border-radius:13px;padding:9px 11px;margin:8px 0}
+.jsDataStatus.warn{background:#fff0ed;color:#ad354d}
+.jsDataFoot{font-size:11px;line-height:1.45;color:#85798d;margin-top:12px}
+#jsDataDialog{
+ position:fixed;z-index:700;inset:0;background:rgba(27,13,35,.6);
+ display:flex;align-items:center;justify-content:center;padding:22px;
+}
+#jsDataDialog[hidden]{display:none!important}
+.jsDataDialogPanel{
+ width:min(100%,420px);max-height:min(87vh,720px);overflow:auto;
+ background:#fff;border-radius:22px;padding:24px 20px;box-shadow:0 16px 45px #210d3450;
+}
+.jsDataDialogPanel h2{font:800 23px Georgia,serif;color:var(--js-custom-dark);margin:0 0 10px}
+.jsDataDialogPanel p{color:#685872;line-height:1.5;font-size:14px;margin:0 0 20px}
+#jsDataDialogActions{display:flex;flex-wrap:wrap;gap:8px}
+#jsDataDialogActions button{
+ flex:1;min-width:115px;border:0;border-radius:12px;background:#f0e7f4;
+ color:var(--js-custom-dark);font-size:12px;font-weight:800;padding:11px 7px;
+}
+#jsDataDialogActions button.jsDataPrimary{background:var(--js-custom-accent);color:#fff}
+#jsDataDialogActions button.jsDataDanger{background:#bf455d;color:#fff}
+@media(max-width:360px){
+ .jsThemeChoices{gap:3px}.jsThemeChoices i{width:25px;height:25px}
+ .jsCategoryRow{grid-template-columns:minmax(0,1fr) 42px 58px 24px;gap:3px}
+ .jsCategoryRow span{font-size:9px}
+}
+/* Do not change the JennySells brand logo itself. Accents/backgrounds follow saved palette.
+   Semantic KPI colors (blue, orange, green) retain their meaning. */
+html[data-js-theme] body{background:var(--js-custom-bg)!important}
+html[data-js-theme] .app{
+ background:linear-gradient(160deg,var(--js-custom-bg) 0%,var(--js-custom-bg2) 58%,var(--js-custom-bg) 100%)!important;
+}
+html[data-js-theme] .app .brand{
+ background:linear-gradient(110deg,var(--js-custom-bg),var(--js-custom-bg2),var(--js-custom-soft))!important;
+}
+html[data-js-theme] .bottom .plus{
+ background:linear-gradient(145deg,var(--js-custom-accent),var(--js-custom-dark))!important;
+ border-color:var(--js-custom-soft)!important;
+ box-shadow:0 9px 20px #33224422!important;
+}
+html[data-js-theme] .bottom .nav.sel,html[data-js-theme] .bottom .nav.sel span{
+ color:var(--js-custom-accent)!important;
+}
+html[data-js-theme] #marketImportLaunch.jsImportLaunch{
+ background:linear-gradient(110deg,var(--js-custom-soft),var(--js-custom-bg),var(--js-custom-soft))!important;
+}
+html[data-js-theme] #marketImportLaunch .jsImportSymbol{
+ background:linear-gradient(145deg,var(--js-custom-accent),var(--js-custom-dark))!important;
+}
+html[data-js-theme] .jsChartChange:not(.down){background:#e5f7ee}
+html[data-js-theme] #home #jsHomeChart .jsChartSummary strong,
+html[data-js-theme] .app #home .stats .stat:nth-child(2) b{color:var(--js-custom-accent)!important}
+html[data-js-theme] .jsChartPlot svg path[stroke="#7820C8"]{stroke:var(--js-custom-accent)!important}
+html[data-js-theme] .jsChartPlot svg circle[fill="#7E22CF"]{fill:var(--js-custom-accent)!important}
+html[data-js-theme] .jsStatsBar i{background:linear-gradient(90deg,var(--js-custom-soft),var(--js-custom-accent))!important}
+html[data-js-theme] .jsStatsName strong,
+html[data-js-theme] .jsStatsArrow,
+html[data-js-theme] #jsNewestAll,
+html[data-js-theme] .app .sec button,
+html[data-js-theme] .jsHeadingLinks button{color:var(--js-custom-accent)!important}
+html[data-js-theme] .jsChartMode,html[data-js-theme] .jsStatsFilter{
+ background:var(--js-custom-soft)!important;color:var(--js-custom-dark)!important
+}
+html[data-js-theme] .jsChartInfo{background:var(--js-custom-accent)!important}
+html[data-js-theme] #home .stat:nth-child(2){border-left-color:var(--js-custom-accent)!important}
+html[data-js-theme] #home .stat:nth-child(2) .metricIcon{background:var(--js-custom-soft)!important;color:var(--js-custom-accent)!important}

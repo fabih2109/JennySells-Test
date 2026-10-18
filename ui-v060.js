@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.16-test';
+  const VERSION='0.11.0-test';
 
   function addFont(){
     if(document.querySelector('link[data-jennysells-logo-font]')) return;
@@ -49,14 +49,14 @@
       <div class="hero"><h1>Einstellungen</h1><p>JennySells Testversion</p></div>
       <div class="settingsCard">
         <div class="settingsRow"><span>App-Version</span><strong><span class="versionBadge" id="appVersion">v${VERSION}</span></strong></div>
-        <div class="settingsRow"><span>Datenhaltung</span><strong>Lokal auf diesem Gerät</strong></div>
-        <div class="settingsRow"><span>Demo-Datensatz</span><strong>20 Beispielartikel</strong></div>
+        <div class="settingsRow"><span>Datenhaltung</span><strong>IndexedDB (lokal)</strong></div>
+        <div class="settingsRow"><span>Demo-Startdaten</span><strong>20 Beispielartikel</strong></div>
         <div class="settingsRow"><span>Projekt</span><strong>JennySells-Test</strong></div>
       </div>
       <button class="action secondary" id="resetDemoSettings">↻ Demo-Daten zurücksetzen</button>
       <div class="note">Testversion: Noch keine Cloud-Synchronisation. Die Daten liegen aktuell im lokalen Browser-/App-Speicher.</div>`;
     app.appendChild(section);
-    const reset=document.getElementById('resetDemoSettings');if(reset&&typeof resetDemo==='function')reset.onclick=resetDemo;
+    const reset=document.getElementById('resetDemoSettings');if(reset)reset.onclick=()=>window.JennySellsData?.askResetDemo?.();
 
     const nav=document.querySelector('.bottom');
     if(nav&&!nav.querySelector('[data-go="settings"]')){

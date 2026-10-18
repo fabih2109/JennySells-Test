@@ -32,8 +32,8 @@ const demo=[
 ];
 
 function seed(){return demo.map((d,i)=>({id:'demo'+i,title:d[0],brand:d[1],size:d[2],category:d[3],child:d[4],condition:d[5],source:d[6],status:d[7],price:d[8],onlineSince:d[9],soldPrice:d[10],soldDate:d[11],storage:d[12],emoji:d[13],purchasePrice:null,purchaseYear:'',url:'',note:'',shipping:0,fees:0,createdAt:new Date(Date.now()-i*86400000).toISOString()}));}
-function load(){try{items=JSON.parse(localStorage.getItem(KEY)||'null')||seed()}catch{items=seed()}save();}
-function save(){localStorage.setItem(KEY,JSON.stringify(items));}
+function load(){try{items=JSON.parse(localStorage.getItem(KEY)||'null')||seed()}catch{items=seed()}/* IndexedDB hydration in data-v117.js; never overwrite storage during bootstrap. */}
+function save(){if(window.JennySellsData?.queueSave)return window.JennySellsData.queueSave(items);localStorage.setItem(KEY,JSON.stringify(items));}
 function net(i){return Number(i.soldPrice||0)-Number(i.shipping||0)-Number(i.fees||0);}
 function statusLabel(s){return {online:'Online',reserved:'Reserviert',sold:'Verkauft',draft:'Entwurf'}[s]||s;}
 function statusClass(s){return s==='sold'?'sold':s==='reserved'?'res':s==='draft'?'draft':'';}
@@ -55,7 +55,7 @@ function num(id){let v=$(id).value;return v===''?null:Number(v);}
 function collect(){let old=items.find(x=>x.id===$('#editId').value)||blank();return {...old,id:$('#editId').value||uid(),title:$('#fTitle').value.trim(),brand:$('#fBrand').value.trim(),size:$('#fSize').value.trim(),category:$('#fCategory').value.trim(),color:$('#fColor').value.trim(),condition:$('#fCondition').value,source:$('#fSource').value,status:$('#fStatus').value,price:num('#fPrice'),onlineSince:$('#fOnlineSince').value,url:$('#fUrl').value.trim(),note:$('#fNote').value.trim(),soldPrice:num('#fSoldPrice'),soldDate:$('#fSoldDate').value,shipping:num('#fShipping')||0,fees:num('#fFees')||0};}
 function parseShare(){const qp=new URLSearchParams(location.search);let incoming=[qp.get('title'),qp.get('text'),qp.get('url')].filter(Boolean).join('\n');if(!incoming)return;const um=incoming.match(/https?:\/\/[^\s]+/i);let url=um?um[0]:'';let t=(incoming.split(url)[0]||'').replace(/\|\s*Vinted\s*$/i,'').trim();let idm=url.match(/\/items\/(\d+)-?([^/?#]*)/i);let slug=idm&&idm[2]?decodeURIComponent(idm[2]).replace(/-/g,' ').replace(/\bgrosse\b/gi,'Größe'):'';if(!t)t=slug;let parts=t.split('|').map(x=>x.trim()).filter(Boolean),size=(t.match(/(?:Größe|Gr\.?)\s*(\d{2,3})/i)||[])[1]||'',brand=parts[0]||'',category=parts.slice(1).filter(p=>!/(Größe|Gr\.)/i.test(p)).join(' / ');let i=blank();i.title=t||'Vinted-Artikel';i.brand=brand;i.size=size;i.category=category;i.source='Vinted';i.url=url;i.onlineSince=today();openEditor(i,'Von Vinted geteilt · Artikel-ID '+(idm?idm[1]:'erkannt'));history.replaceState({},'',location.pathname);}
 
-$('#saveItem').onclick=()=>{let r=collect();let ix=items.findIndex(x=>x.id===r.id);if(ix>=0)items[ix]=r;else items.unshift(r);save();$('#editorBg').classList.remove('show');refresh();go('items');};
+$('#saveItem').onclick=()=>{if(window.JennySellsData?.validateEditorCategory&&!window.JennySellsData.validateEditorCategory())return;let r=collect();let ix=items.findIndex(x=>x.id===r.id);if(ix>=0)items[ix]=r;else items.unshift(r);save();$('#editorBg').classList.remove('show');refresh();go('items');};
 function hideDeleteConfirm(){const bg=$('#deleteConfirmBg');bg.hidden=true;$('#deleteItem').focus();}
 $('#deleteItem').onclick=()=>{
   const bg=$('#deleteConfirmBg'),item=items.find(i=>i.id===$('#editId').value);

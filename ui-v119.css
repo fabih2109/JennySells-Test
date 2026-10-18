@@ -1,0 +1,145 @@
+/* JennySells v0.11.2 – follow Jennylicious navigation and detail page conventions. */
+body[data-js-current-page="home"] .app > .brand{display:block!important}
+body[data-js-current-page]:not([data-js-current-page="home"]) .app > .brand{display:none!important}
+/* Search is an exclusive element of the search tab, never a universal page header. */
+.app > .search{display:none!important}
+#items .jsSearchOnly{display:block!important;margin:3px 0 16px!important}
+#home #marketImportLaunch{display:none!important}
+/* Do not remove the import button from the DOM: existing Vinted capture still delegates to it. */
+.bottom [data-go="settings"] .jsMoreNavIcon{font:800 26px/1 sans-serif;letter-spacing:0;display:block;text-align:center}
+.jsMoreWelcome{margin-top:6px!important;margin-bottom:19px!important}
+.jsMoreWelcome h1{font-size:32px!important}
+.jsMoreMenu button{min-height:62px!important}
+#settings .jsMoreDetailTop{margin:5px 0 15px}
+#settings .jsMoreDetailTop .jsDetailHeader{display:flex;align-items:center;gap:14px;min-height:66px}
+#settings .jsMoreDetailTop .jsDetailHeading{min-width:0;flex:1}
+#settings .jsMoreDetailTop .jsDetailEyebrow{font-size:10px;color:#917e98;line-height:1.25;letter-spacing:.9px;margin-bottom:2px}
+#settings .jsMoreDetailTop .jsDetailHeading h2{
+ font-size:clamp(24px,7vw,32px)!important;line-height:1.05!important;margin:0!important;
+}
+#settings .jsMoreDetailTop .jsMoreSubtitle{display:none!important}
+.jsCircleBack{
+ border:0!important;flex-shrink:0;width:45px!important;height:45px!important;
+ min-width:45px!important;min-height:45px!important;
+ border-radius:50%!important;background:white!important;color:var(--js-custom-accent,#71389b)!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ font-size:37px!important;line-height:1!important;font-family:Arial,sans-serif!important;font-weight:350!important;
+ box-shadow:0 4px 15px #4426500d!important;padding:0 0 5px!important;margin:0!important;
+}
+.jsCircleBack:active{background:var(--js-custom-soft,#f0e3f5)!important}
+.jsAboutCard{
+ display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+ margin:13px 0 0;border-radius:22px;background:#fff;min-height:226px;
+ padding:28px 20px 25px;box-shadow:0 6px 20px #6e4f7b10;
+}
+.jsAboutHeart{color:var(--js-custom-accent,#71389b);font-size:47px;line-height:1;margin-bottom:13px}
+.jsAboutCard h3{font:800 38px/1.1 Georgia,serif;color:#291d34;margin:0 0 8px}
+.jsAboutMotto{font-size:11px;letter-spacing:2.5px;color:#67566b;font-weight:550}
+.jsAboutVersion{
+ display:inline-block;margin-top:24px;border-radius:30px;padding:9px 17px;
+ background:var(--js-custom-soft,#f0e3f5);color:var(--js-custom-dark,#54227d);
+ font-weight:800;font-size:13px;
+}
+.jsAdvancedReset{margin:13px 0 2px!important;background:#fbf1f7!important;font-size:12px!important}
+.jsJDialog,.jsViewerBg{position:fixed;inset:0;z-index:180;background:rgba(24,11,34,.50);padding:0}
+.jsJDialog[hidden],.jsViewerBg[hidden]{display:none!important}
+.jsJDialog{display:flex;align-items:flex-end;justify-content:center}
+.jsJDialogSheet{
+ width:min(100%,520px);border-radius:27px 27px 0 0;background:linear-gradient(165deg,#fff,#fcf6fe);
+ padding:23px 19px calc(22px + env(safe-area-inset-bottom,0px));
+ max-height:91dvh;overflow:auto;box-shadow:0 -6px 28px #1b0f2c24;
+}
+.jsJDialogTop{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.jsJDialogTop h2{font:800 26px Georgia,serif;color:#2a1e34;margin:0}
+.jsJDialogSheet > p{font-size:13px;color:#8a798e;margin:10px 0 20px}
+.jsPlusOption{
+ display:flex;align-items:center;gap:14px;text-align:left;width:100%;
+ border:1px solid #f0e2f0;border-radius:18px;background:#fff;
+ margin:10px 0;padding:15px 12px;color:#291b36;
+ box-shadow:0 4px 13px #4121550a;
+}
+.jsPlusOptionIcon{
+ flex-shrink:0;width:52px;height:52px;border-radius:15px;background:var(--js-custom-soft,#f0e3f5);
+ display:grid;place-items:center;color:var(--js-custom-accent,#71389b);
+}
+.jsPlusOptionIcon svg{width:25px;height:25px}
+.jsPlusOption span:nth-child(2){display:grid;gap:6px;flex:1;min-width:0}
+.jsPlusOption b{font-size:15px;line-height:1.15}
+.jsPlusOption small{font-size:12px;color:#817287;line-height:1.3}
+.jsPlusOption i{font-style:normal;font-size:24px;color:#8d749d}
+body.jsOverlayOpen{overflow:hidden}
+.jsViewerBg{display:flex;justify-content:center;align-items:flex-end}
+.jsViewerSheet{
+ width:min(100%,520px);max-height:97dvh;overflow:auto;
+ border-radius:27px 27px 0 0;background:linear-gradient(175deg,var(--js-custom-bg2,#fff8fc),#fff);
+ padding:16px 17px calc(26px + env(safe-area-inset-bottom,0px));
+ box-shadow:0 -12px 35px #24132b22;overscroll-behavior:contain;
+}
+.jsViewerTop{display:flex;align-items:center;gap:12px;margin:0 0 17px}
+.jsViewerHead{flex:1;min-width:0}
+.jsViewerHead span{font-size:11px;color:#80738b;letter-spacing:1.4px}
+.jsViewerHead h2{font:800 26px Georgia,serif;margin:3px 0 0;color:#281d36}
+.jsViewerPencil{
+ width:44px;height:44px;display:grid;place-items:center;
+ border:0;border-radius:50%;background:var(--js-custom-soft,#f0e3f5);
+ color:var(--js-custom-accent,#71389b);
+}
+.jsViewerPencil svg{width:23px;height:23px}
+.jsViewerPhoto{
+ height:clamp(180px,58vw,285px);max-height:285px;
+ display:flex;justify-content:center;align-items:center;
+ border-radius:22px;background:linear-gradient(135deg,var(--js-custom-soft,#f0e3f5),#fff);
+ overflow:hidden;border:1px solid #efe6f2;
+}
+.jsViewerCover{width:100%;height:100%;object-fit:contain}
+#jsViewerCoverFallback{font-size:88px;line-height:1}
+.jsViewerInfo{margin:15px 2px 0}
+.jsViewerStatus{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;color:#7f6389}
+.jsViewerStatusPill{display:inline-flex;border-radius:100px;background:var(--js-custom-soft,#f0e3f5);color:var(--js-custom-dark,#54227d);padding:6px 10px;font-weight:700}
+.jsViewerInfo h3{font:800 25px/1.2 Georgia,serif;color:#271e36;margin:12px 0 7px}
+.jsViewerPrice{font:850 30px/1.15 Georgia,serif;color:var(--js-custom-accent,#71389b);margin-bottom:20px}
+.jsViewerData{border-radius:20px;background:#fff;padding:4px 14px;box-shadow:0 6px 15px #4b315013}
+.jsViewerDataRow{display:flex;justify-content:space-between;gap:13px;border-bottom:1px solid #f0e7f1;padding:13px 0;font-size:13px;line-height:1.25}
+.jsViewerDataRow:last-child{border-bottom:0}
+.jsViewerDataRow span{color:#817589}
+.jsViewerDataRow strong{color:#322541;text-align:right;overflow-wrap:anywhere;max-width:65%}
+.jsViewerNote{border-radius:18px;background:#fff;padding:16px;margin-top:15px}
+.jsViewerNote h4{font:800 19px Georgia,serif;margin:0 0 8px}
+.jsViewerNote p{font-size:13px;line-height:1.5;margin:0;white-space:normal;overflow-wrap:anywhere}
+.jsViewerLink{display:block;border-radius:15px;padding:13px 15px;margin-top:13px;text-align:center;background:var(--js-custom-soft,#f0e3f5);color:var(--js-custom-dark,#54227d);font-size:13px;font-weight:750;text-decoration:none}
+.jsViewerActions{padding:14px 2px}
+.jsViewerActions button{border:1px solid #f1d6dc;border-radius:14px;padding:12px 15px;background:#fff2f4;color:#b34860;font-size:13px;width:100%;font-weight:700}
+#editorBg #closeEditor{position:absolute!important;right:13px!important;top:12px!important;z-index:1}
+#jsImportClose.jsCircleBack,#jsMetricClose.jsCircleBack{font-size:33px!important}
+@media(max-width:370px){
+ .jsJDialogSheet{padding:19px 13px 20px}
+ .jsViewerSheet{padding:13px 12px 20px}
+ .jsViewerHead h2{font-size:23px}
+ .jsPlusOption{gap:10px}
+ .jsPlusOptionIcon{width:46px;height:46px}
+}
+
+/* Every true back action uses Jennylicious' white round arrow, left aligned. */
+#editorBg #closeEditor.jsCircleBack{
+ left:12px!important;right:auto!important;top:12px!important;
+ position:absolute!important;
+}
+#editorBg .sheet{position:relative}
+#editorBg .sheet > #editorTitle{
+ min-height:48px!important;display:flex!important;
+ align-items:center!important;padding-left:56px!important;
+ font-size:clamp(22px,6vw,27px)!important;
+}
+.jsImportHead,.jsMetricHead{justify-content:flex-start!important;gap:13px!important;min-height:46px!important}
+#jsImportClose.jsCircleBack,#jsMetricClose.jsCircleBack{order:-1}
+#jsImportClose.jsCircleBack + h2,#jsMetricClose.jsCircleBack + h2{flex:1}
+#newest .hero{
+ position:relative;text-align:left!important;
+ padding:14px 0 17px 60px!important;
+ min-height:70px;
+}
+#newest .hero #jsNewestBack{
+ position:absolute;top:12px;left:0;
+}
+#newest .hero h1{font-size:clamp(24px,7vw,30px)!important;line-height:1.08!important}
+#newest .hero p{margin-top:4px!important}

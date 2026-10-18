@@ -40,7 +40,59 @@ function statusClass(s){return s==='sold'?'sold':s==='reserved'?'res':s==='draft
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 function rowHtml(i){const amount=i.status==='sold'?eur(net(i)):eur(i.price);const src=i.source||'Privat';const srcClass=src==='Kleinanzeigen'?' source-Kleinanzeigen':'';return `<button class="row itemOpen" data-id="${esc(i.id)}"><div class="thumb">${esc(i.emoji||'👕')}</div><div class="rowMain"><b>${esc(i.title)}</b><small>${esc([i.brand,i.size&&('Gr. '+i.size),src].filter(Boolean).join(' · '))}</small><span class="marketChip${srcClass}"><span class="marketSymbol">${esc(icons[src]||'♥')}</span>${esc(src)}</span>${i.status==='sold'&&(i.saleType==='package'||i.soldInPackage)?'<span class="jsPackageBadge">📦 Im Paket verkauft</span>':''}</div><div class="right"><strong>${amount}</strong><span class="pill ${statusClass(i.status)}">${esc(statusLabel(i.status))}</span></div><span class="rowChevron" aria-hidden="true">›</span></button>`;}
 function dashboard(){const active=items.filter(i=>['online','reserved'].includes(i.status));const sold=items.filter(i=>i.status==='sold');$('#stActive').textContent=active.length;$('#stTotal').textContent=items.length;$('#stPotential').textContent=eur(active.reduce((a,i)=>a+Number(i.price||0),0));$('#stRevenue').textContent=eur(sold.reduce((a,i)=>a+net(i),0));const channels=['Vinted','Kleinanzeigen','Basar'];$('#channelTiles').innerHTML=channels.map(c=>{const a=items.filter(i=>i.source===c),r=a.filter(i=>i.status==='sold').reduce((s,i)=>s+net(i),0);return `<button class="tile channelGo" data-channel="${c}"><span class="badge">${a.length} Artikel</span><div class="ico">${icons[c]}</div><b>${c}</b><small>${eur(r)}</small></button>`}).join('');$('#recentSold').innerHTML=[...sold].sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||'')).slice(0,4).map(rowHtml).join('')||'<div class="note">Noch nichts verkauft.</div>';$('#recentItems').innerHTML=[...items].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,5).map(rowHtml).join('');bindRows();}
-function renderItems(){let q=$('#globalSearch').value.trim().toLowerCase(),source=$('#sourceFilter').value,status=$('#statusFilter').value;let filtered=items.filter(i=>{const hay=[i.title,i.brand,i.size,i.category,i.color,i.source,i.note].join(' ').toLowerCase();return (!q||hay.includes(q))&&(!source||i.source===source)&&(!status||i.status===status)&&(!currentChild||i.child===currentChild);});$('#resultCount').textContent=`${filtered.length} von ${items.length} Artikeln`;$('#itemList').innerHTML=filtered.map(rowHtml).join('')||'<div class="note">Keine Artikel gefunden.</div>';bindRows();}
+/* Suche v0.11.5: Kategorie und Größe als kombinierbare Filter; URL-Suche bleibt lokal. */
+const searchCollator=new Intl.Collator('de',{numeric:true,sensitivity:'base'});
+const searchText=value=>String(value??'').trim().replace(/\s+/g,' ');
+const searchFold=value=>searchText(value).toLocaleLowerCase('de-DE');
+const searchSize=value=>searchFold(value).replace(/\s*([\/–-])\s*/g,'$1');
+function fillSearchFacet(id,label,values,fold){
+ const select=$('#'+id);
+ if(!select)return;
+ const distinct=new Map();
+ values.forEach(raw=>{
+  const value=searchText(raw),key=fold(value);
+  if(key&&!distinct.has(key))distinct.set(key,value);
+ });
+ const options=[...distinct.values()].sort(searchCollator.compare);
+ const signature=JSON.stringify(options);
+ if(select.dataset.optionsSignature===signature)return;
+ const prior=select.value,priorKey=fold(prior);
+ select.replaceChildren(new Option(label,''));
+ options.forEach(value=>select.add(new Option(value,value)));
+ const existing=options.find(value=>fold(value)===priorKey);
+ select.value=existing||'';
+ select.dataset.optionsSignature=signature;
+}
+function syncSearchFacets(){
+ const configured=window.JennySellsData?.getStatus?.().categories||[];
+ fillSearchFacet('categoryFilter','Alle Kategorien',
+  [...configured,...items.map(item=>item.category)],searchFold);
+ fillSearchFacet('sizeFilter','Alle Größen',
+  items.map(item=>item.size),searchSize);
+}
+function matchesSearchItem(item,query,source,status,category,size,normalizedUrl){
+ const candidate=[item.title,item.brand,item.size,item.category,item.color,item.source,item.note,item.url]
+  .map(searchText).join(' ').toLocaleLowerCase('de-DE');
+ const linked=normalizedUrl&&item.url&&window.JennySellsQuickSale?.canonicalKey?.(item.url)===normalizedUrl;
+ return (!query||candidate.includes(query)||linked)&&
+  (!source||item.source===source)&&(!status||item.status===status)&&
+  (!category||searchFold(item.category)===searchFold(category))&&
+  (!size||searchSize(item.size)===searchSize(size))&&
+  (!currentChild||item.child===currentChild);
+}
+function renderItems(){
+ syncSearchFacets();
+ const query=searchFold($('#globalSearch')?.value);
+ const source=$('#sourceFilter')?.value||'',status=$('#statusFilter')?.value||'';
+ const category=$('#categoryFilter')?.value||'',size=$('#sizeFilter')?.value||'';
+ const normalizedUrl=window.JennySellsQuickSale?.canonicalKey?.($('#globalSearch')?.value||'')||'';
+ const filtered=items.filter(item=>matchesSearchItem(item,query,source,status,category,size,normalizedUrl));
+ $('#resultCount').textContent=filtered.length+' von '+items.length+' Artikeln';
+ $('#itemList').innerHTML=filtered.map(rowHtml).join('')||'<div class="note">Keine Artikel gefunden. Passe die Suchbegriffe oder Filter an.</div>';
+ const clear=$('#jsSearchReset');
+ if(clear)clear.hidden=!(query||source||status||category||size);
+ bindRows();
+}
 function renderSold(){let s=items.filter(i=>i.status==='sold');$('#soldRevenue').textContent=eur(s.reduce((a,i)=>a+net(i),0));$('#soldCount').textContent=s.length;$('#soldList').innerHTML=s.sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||'')).map(rowHtml).join('')||'<div class="note">Noch nichts verkauft.</div>';bindRows();}
 function stats(){const sold=items.filter(i=>i.status==='sold');const group=key=>Object.entries(sold.reduce((a,i)=>{let k=i[key]||'Sonstige';a[k]=(a[k]||0)+net(i);return a;},{})).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="row"><div class="thumb">${key==='source'?(icons[k]||'•'):'♥'}</div><div><b>${esc(k)}</b><small>Nettoerlös</small></div><div class="right"><strong>${eur(v)}</strong></div></div>`).join('');$('#statsChannels').innerHTML=group('source');$('#statsChildren').innerHTML=group('category');}
 function children(){/* Child filtering was intentionally retired in v0.10.9. */}
@@ -82,6 +134,8 @@ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{if(b.dataset.st
 $('#navAdd').onclick=()=>openEditor();
 $('#globalSearch').oninput=()=>{go('items');renderItems();};
 $('#sourceFilter').onchange=renderItems;$('#statusFilter').onchange=renderItems;
+$('#categoryFilter').onchange=renderItems;$('#sizeFilter').onchange=renderItems;
+$('#jsSearchReset').onclick=()=>{$('#globalSearch').value='';['sourceFilter','statusFilter','categoryFilter','sizeFilter'].forEach(id=>$('#'+id).value='');currentChild='';renderItems();$('#globalSearch').focus();};
 document.addEventListener('click',e=>{let t=e.target.closest('.channelGo');if(t){$('#sourceFilter').value=t.dataset.channel;go('items');}});
-if($('#resetDemo'))$('#resetDemo').onclick=()=>{items=seed();save();currentChild='';$('#globalSearch').value='';$('#sourceFilter').value='';$('#statusFilter').value='';refresh();go('home');};
+if($('#resetDemo'))$('#resetDemo').onclick=()=>{items=seed();save();currentChild='';$('#globalSearch').value='';$('#sourceFilter').value='';$('#statusFilter').value='';$('#categoryFilter').value='';$('#sizeFilter').value='';refresh();go('home');};
 load();refresh();parseShare();

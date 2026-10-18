@@ -107,7 +107,8 @@
     const rawSize=labelValue(lines,'Größe');
     const size=cleanSize(rawSize)||cleanSize(title)||link.size||'';
     const brandRaw=labelValue(lines,'Marke');
-    const brand=(brandRaw&&brandRaw.length<40?brandRaw:'')||link.brand;
+    const cleanBrand=String(brandRaw||'').replace(/\s*[:：;；]+\s*$/u,'').trim();
+    const brand=(cleanBrand&&cleanBrand.length<40?cleanBrand:'')||link.brand;
     const condition=conditionValue(labelValue(lines,'Zustand'));
     const rawColor=labelValue(lines,'Farbe');
     const color=/^(?:beige|blau|rot|rosa|pink|grün|gelb|schwarz|weiß|weiss|grau|braun|lila|violett|orange|bunt|creme|navy|türkis)$/i.test(rawColor)?rawColor[0].toUpperCase()+rawColor.slice(1):'';

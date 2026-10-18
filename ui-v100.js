@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.8-test';
+  const VERSION='0.10.9-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=1;
   const IMAGE_STORE='images';
@@ -201,7 +201,7 @@
       const url=firstUrl(text);
       if(!url)throw new Error('Kein Web-Link in der Zwischenablage gefunden.');
       const meta=detectMarketplace(url);
-      out.innerHTML=`<span class="jsPlatform">${meta.label}</span><br>${url}`;
+      out.innerHTML=`<span class="jsPlatform">${meta.label}</span><br>${url.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}`;
       out.dataset.url=url;
       out.dataset.source=meta.source;
     }catch(err){
@@ -277,7 +277,7 @@
     draft.title=meta.title||`${meta.label}-Artikel`;
     draft.brand=meta.brand||'';
     draft.size=meta.size||'';
-    draft.onlineSince=typeof today==='function'?today():new Date().toISOString().slice(0,10);
+    draft.onlineSince=''; // An imported listing's publication date is unknown unless the source provides a precise date.
     const key='cover:'+draft.id;
     q('#jsContinueImport').disabled=true;
     q('#jsContinueImport').textContent='Titelbild wird gespeichert …';

@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.8-test';
+  const VERSION='0.10.9-test';
 
   function addFont(){
     if(document.querySelector('link[data-jennysells-logo-font]')) return;

@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.8-test';
+  const VERSION='0.10.9-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=1;
   const IMAGE_STORE='images';
@@ -80,7 +80,7 @@
     if(status&&!q('#jsV104Ocr')){
       const box=document.createElement('div');
       box.id='jsV104Ocr';box.className='jsV104Box hidden';
-      box.innerHTML=`<h4>1 · Text erkennen</h4><div class="jsV104Help">Zuerst liest JennySells Titel, Preis und Größe aus den unveränderten Screenshots. Erst danach stellst du das Titelbild selbst ein.</div><button class="jsImportBtn" id="jsV104RunOcr" type="button">🔎 Titel & Preis erkennen</button><div class="jsV104Progress" id="jsV104Progress">Screenshots auswählen.</div><div class="jsV104Result hidden" id="jsV104Result"></div>`;
+      box.innerHTML=`<h4>1 · Text erkennen</h4><div class="jsV104Help">Zuerst liest JennySells Angebotstitel, Verkäuferpreis, Größe und weitere Artikeldetails aus den unveränderten Screenshots. Erst danach stellst du das Titelbild selbst ein.</div><button class="jsImportBtn" id="jsV104RunOcr" type="button">🔎 Titel & Preis erkennen</button><div class="jsV104Progress" id="jsV104Progress">Screenshots auswählen.</div><div class="jsV104Result hidden" id="jsV104Result"></div>`;
       status.insertAdjacentElement('afterend',box);
       q('#jsV104RunOcr').onclick=runOcr;
     }
@@ -178,7 +178,11 @@
     try{
       setProgress('OCR wird geladen …','busy');const w=await getWorker();const texts=[];
       for(let i=0;i<files.length;i++){setProgress(`Screenshot ${i+1}/${files.length} wird gelesen …`,'busy');const r=await w.recognize(files[i]);texts.push(r?.data?.text||'')}
-      suggestion=extract(texts.join('\n'));renderSuggestion();ocrDone=true;setProgress('Text erkannt. Jetzt Titelbild selbst einstellen.','ok');
+      const meta=detectMarketplace(q('#jsImportUrl')?.dataset.url||'');
+      suggestion=(meta.source==='Vinted'&&window.JennySellsVintedParser?.parse)
+        ? window.JennySellsVintedParser.parse(texts,q('#jsImportUrl')?.dataset.url||'')
+        : extract(texts.join('\n'));
+      renderSuggestion();ocrDone=true;setProgress('Text erkannt. Jetzt Titelbild selbst einstellen.','ok');
       q('#jsV104Crop')?.classList.remove('hidden');cropIndex=0;if(q('#jsCropSelect'))q('#jsCropSelect').value='0';await openCropImage();
     }catch(e){setProgress(e.message||'Texterkennung fehlgeschlagen.','');}
     finally{btn.disabled=false}
@@ -186,7 +190,10 @@
   function renderSuggestion(){
     const r=q('#jsV104Result');if(!r||!suggestion)return;
     const euro=suggestion.price===null?'–':suggestion.price.toLocaleString('de-DE',{maximumFractionDigits:2})+' €';
-    r.innerHTML=`<b>Titel</b><span>${escapeHtml(suggestion.title||'–')}</span><b>Preis</b><span>${euro}</span><b>Größe</b><span>${escapeHtml(suggestion.size||'–')}</span>`;r.classList.remove('hidden');
+    const fields=[['Titel',suggestion.title],['Preis',euro],['Größe',suggestion.size],['Marke',suggestion.brand],['Kategorie',suggestion.category],['Zustand',suggestion.condition],['Farbe',suggestion.color],['Online seit',suggestion.uploadedRelative?'ca. '+suggestion.uploadedRelative:'']];
+    r.innerHTML=fields.map(([label,value])=>`<b>${escapeHtml(label)}</b><span>${escapeHtml(value||'–')}</span>`).join('');
+    if(suggestion.warnings?.length)r.insertAdjacentHTML('beforeend',suggestion.warnings.map(w=>`<div style="grid-column:1/-1;color:#95671f">${escapeHtml(w)}</div>`).join(''));
+    r.classList.remove('hidden');
   }
   function setProgress(text,state=''){const e=q('#jsV104Progress');if(e){e.textContent=text;e.className='jsV104Progress'+(state?' '+state:'')}}
   function setCropStatus(text,state=''){const e=q('#jsCropStatus');if(e){e.textContent=text;e.className='jsV104Progress'+(state?' '+state:'')}}
@@ -247,7 +254,25 @@
   async function applyAfterContinue(){
     const id=await waitEditor();if(!id)return;await new Promise(r=>setTimeout(r,120));
     if(manualCropBlob){try{await putCover('cover:'+id,manualCropBlob);const img=q('#jsEditorCover img'),box=q('#jsEditorCover');if(img&&box){img.src=URL.createObjectURL(manualCropBlob);box.classList.add('show')}}catch(e){console.warn('manual crop save failed',e)}}
-    if(suggestion){const title=q('#fTitle'),price=q('#fPrice'),size=q('#fSize');if(title&&suggestion.title&&(genericTitle(title.value)||suggestion.title.length>title.value.trim().length+10))title.value=suggestion.title;if(price&&(price.value===''||Number(price.value)===0)&&suggestion.price!==null)price.value=String(suggestion.price);if(size&&!size.value.trim()&&suggestion.size)size.value=suggestion.size;const note=q('#importNote');if(note){const extra=`Automatisch erkannt: ${suggestion.title?'Titel':'–'}${suggestion.price!==null?' · Preis '+suggestion.price.toLocaleString('de-DE')+' €':''}${suggestion.size?' · Größe '+suggestion.size:''} · Titelbild manuell eingestellt. Bitte kurz prüfen.`;note.textContent=(note.textContent?note.textContent+' · ':'')+extra;note.classList.remove('hidden')}}
+    if(suggestion){
+      const meta=detectMarketplace(q('#jsImportUrl')?.dataset.url||'');
+      const title=q('#fTitle'),price=q('#fPrice'),size=q('#fSize');
+      if(meta.source==='Vinted'){
+        const fields=[['#fTitle','title'],['#fBrand','brand'],['#fSize','size'],['#fCondition','condition'],['#fColor','color'],['#fCategory','category']];
+        for(const [selector,key] of fields){const el=q(selector);if(el&&suggestion[key])el.value=suggestion[key]}
+        if(price&&suggestion.price!==null)price.value=String(suggestion.price);
+        const since=q('#fOnlineSince');if(since)since.value=suggestion.onlineSince||'';
+      }else{
+        if(title&&suggestion.title&&(genericTitle(title.value)||suggestion.title.length>title.value.trim().length+10))title.value=suggestion.title;
+        if(price&&(price.value===''||Number(price.value)===0)&&suggestion.price!==null)price.value=String(suggestion.price);
+        if(size&&!size.value.trim()&&suggestion.size)size.value=suggestion.size;
+      }
+      const note=q('#importNote');
+      if(note){
+        const extra=`Automatisch erkannt: ${suggestion.title?'Titel':'–'}${suggestion.price!==null?' · Angebotspreis '+suggestion.price.toLocaleString('de-DE')+' €':''}${suggestion.size?' · Größe '+suggestion.size:''}${suggestion.uploadedRelative?' · Vinted: hochgeladen '+suggestion.uploadedRelative+' (Datum ungenau)':''} · Titelbild manuell eingestellt. Bitte vor dem Speichern prüfen.`;
+        note.textContent=(note.textContent?note.textContent+' · ':'')+extra;note.classList.remove('hidden');
+      }
+    }
   }
   function setVersion(){const el=q('#appVersion');if(el)el.textContent='v'+VERSION;document.documentElement.dataset.jennysellsVersion=VERSION}
   function run(){addStyles();ensureUi();setVersion()}

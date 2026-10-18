@@ -234,3 +234,91 @@
     font-size:clamp(10px,2.8vw,11px)!important;
   }
 }
+
+/* v0.10.16: compact home sales chart.
+   Only the start-page preview is condensed; details remain available via (i). */
+.app #home #jsHomeChart{
+  padding:12px 12px 10px!important;
+  margin:12px 0 15px!important;
+  border-radius:20px!important;
+}
+.app #home #jsHomeChart .jsChartHead{
+  margin:0 0 8px!important;
+  gap:7px!important;
+}
+.app #home #jsHomeChart .jsChartHead h3{
+  font-size:clamp(16px,4.25vw,20px)!important;
+  line-height:1.13!important;
+  letter-spacing:-.35px!important;
+}
+.app #home #jsHomeChart .jsChartInfo{
+  width:18px!important;
+  height:18px!important;
+  font-size:12px!important;
+}
+.app #home #jsHomeChart .jsChartMode{
+  padding:7px 9px!important;
+  font-size:11px!important;
+}
+.app #home #jsHomeChart .jsChartMain{
+  grid-template-columns:minmax(103px,.78fr) minmax(0,1.65fr)!important;
+  gap:9px!important;
+  align-items:center!important;
+}
+.app #home #jsHomeChart .jsChartSummary{
+  min-height:0!important;
+  height:122px!important;
+  padding:9px 9px!important;
+  border-radius:14px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+}
+.app #home #jsHomeChart .jsChartPeriod{
+  font-size:11px!important;
+  line-height:1.15!important;
+}
+.app #home #jsHomeChart .jsChartSummary strong{
+  font-size:clamp(21px,5.6vw,28px)!important;
+  margin:5px 0 3px!important;
+  line-height:1.05!important;
+  white-space:nowrap!important;
+}
+.app #home #jsHomeChart .jsChartSummary small{
+  font-size:11px!important;
+  line-height:1.25!important;
+}
+.app #home #jsHomeChart .jsChartChange{
+  font-size:10px!important;
+  padding:5px 8px!important;
+  margin-top:8px!important;
+}
+.app #home #jsHomeChart .jsChartPlot{
+  min-width:0!important;
+  height:122px!important;
+  display:flex!important;
+  align-items:center!important;
+}
+.app #home #jsHomeChart .jsChartPlot svg{
+  width:100%!important;
+  height:auto!important;
+  max-height:122px!important;
+}
+.app #home #jsHomeChart .jsChartNote{display:none!important}
+@media(max-width:375px){
+  .app #home #jsHomeChart{padding:11px 9px 9px!important}
+  .app #home #jsHomeChart .jsChartHead h3{font-size:clamp(15px,4.1vw,17px)!important}
+  .app #home #jsHomeChart .jsChartMain{
+    grid-template-columns:minmax(98px,.82fr) minmax(0,1.55fr)!important;
+    gap:7px!important;
+  }
+  .app #home #jsHomeChart .jsChartSummary{
+    height:116px!important;
+    padding:8px 6px!important;
+  }
+  .app #home #jsHomeChart .jsChartSummary strong{font-size:clamp(19px,5.4vw,23px)!important}
+  .app #home #jsHomeChart .jsChartPlot{height:116px!important}
+  .app #home #jsHomeChart .jsChartPlot svg{max-height:116px!important}
+}

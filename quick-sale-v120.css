@@ -1,0 +1,77 @@
+/* JennySells v0.11.3: Schnellverkauf – compact, theme aware and mobile first */
+#jsQSLaunch{
+ display:flex;align-items:center;width:100%;border:0;border-radius:19px;
+ gap:12px;padding:13px 14px;margin:6px 0 18px;text-align:left;
+ background:linear-gradient(110deg,var(--js-custom-soft,#f0e3f5),#fff);
+ color:#2d2240;box-shadow:0 5px 18px #58396b13;
+}
+#jsQSLaunch > span:nth-child(2){flex:1;display:grid;gap:4px;min-width:0}
+#jsQSLaunch b{font-weight:800;font-size:16px}
+#jsQSLaunch small{font-size:12px;line-height:1.25;color:#72657a}
+.jsQSLaunchIcon{
+ width:47px;height:47px;flex-shrink:0;display:grid;place-items:center;border-radius:14px;
+ background:var(--js-custom-accent,#71389b);color:#fff;font-size:26px;font-weight:800;
+}
+.jsQSLaunchArrow{font-size:25px;font-weight:400;color:var(--js-custom-accent,#71389b)}
+.jsQSBackdrop{position:fixed;z-index:220;inset:0;background:#170f1c99;display:flex;align-items:flex-end;justify-content:center}
+.jsQSBackdrop[hidden],#jsQSSearch[hidden],#jsQSForm[hidden],#jsQSMessage[hidden]{display:none!important}
+.jsQSSheet{
+ width:min(100%,530px);max-height:95dvh;overflow:auto;overscroll-behavior:contain;
+ border-radius:27px 27px 0 0;padding:18px 19px calc(23px + env(safe-area-inset-bottom,0px));
+ background:linear-gradient(165deg,#fff,var(--js-custom-bg2,#fff8fc));box-shadow:0 -12px 30px #190f2145;
+}
+.jsQSHeader{display:flex;align-items:center;gap:12px;margin-bottom:19px}
+.jsQSHeader > div{flex:1;min-width:0}
+.jsQSHeader small{display:block;font-size:10px;color:#8a7993;letter-spacing:1.3px;font-weight:700;margin-bottom:3px}
+.jsQSHeader h2{font:800 27px Georgia,serif;margin:0;color:#261b33}
+#jsQSCounter{max-width:99px;font-size:10.5px;font-weight:750;line-height:1.2;text-align:right;color:var(--js-custom-accent,#71389b)}
+#jsQSSearch p{font-size:13px;line-height:1.45;color:#726578;margin:0 0 19px}
+#jsQSSearch label,#jsQSForm label{display:block;font-size:12px;font-weight:800;margin-bottom:8px;color:#4b3753}
+#jsQSLink,#jsQSSoldPrice,#jsQSSoldDate{
+ font-family:inherit;font-size:16px;box-sizing:border-box;min-width:0;width:100%;
+ border:1px solid #e1d5e8;background:#fff;color:#272131;
+ border-radius:14px;padding:13px 12px;outline:none;
+}
+#jsQSLink{resize:vertical;min-height:77px;max-height:145px;line-height:1.4;overflow-wrap:anywhere}
+#jsQSLink:focus,#jsQSSoldPrice:focus,#jsQSSoldDate:focus{border-color:var(--js-custom-accent,#71389b);box-shadow:0 0 0 3px var(--js-custom-soft,#f0e3f5)}
+.jsQSPrimary,.jsQSSecondary,.jsQSText{
+ width:100%;border-radius:14px;min-height:49px;padding:13px 11px;font-size:14px;font-weight:800;
+}
+.jsQSPrimary{border:0;background:var(--js-custom-accent,#71389b);color:white;margin-top:13px;box-shadow:0 6px 13px #4526551b}
+.jsQSPrimary:disabled,.jsQSSecondary:disabled{opacity:.5;cursor:wait}
+.jsQSSecondary{border:1px solid #e1d1e7;color:var(--js-custom-dark,#54227d);background:white;margin-top:10px}
+.jsQSText{border:0;background:transparent;color:var(--js-custom-accent,#71389b);font-size:12px;min-height:38px;margin-top:7px}
+.jsQSMessage{
+ border-radius:13px;background:#e6f6eb;color:#285f3d;
+ line-height:1.35;font-size:13px;padding:13px 12px;margin-top:13px;
+ overflow-wrap:anywhere;
+}
+.jsQSMessage.jsQSError,.jsQSFormError:not(:empty){background:#fff1ed;color:#a13b4d}
+.jsQSFound{
+ display:flex;align-items:center;gap:12px;
+ background:white;border-radius:18px;border:1px solid #f0e7f3;
+ padding:11px;margin-bottom:18px;box-shadow:0 4px 11px #43224a0a;
+}
+.jsQSFoundImg{
+ width:65px;height:71px;flex-shrink:0;display:grid;place-items:center;
+ border-radius:12px;background:var(--js-custom-soft,#f0e3f5);overflow:hidden;font-size:36px;
+}
+.jsQSFoundImg img{width:100%;height:100%;object-fit:cover}
+.jsQSFoundImg img[hidden],#jsQSFallback[hidden]{display:none!important}
+.jsQSFoundText{display:grid;gap:6px;min-width:0;flex:1}
+.jsQSFoundText strong{font-size:14px;color:#35233d;line-height:1.22;overflow-wrap:anywhere}
+.jsQSFoundText small{font-size:11px;color:#8a7b90;line-height:1.3;overflow-wrap:anywhere}
+.jsQSFoundText > span{font-size:11px;color:#70617a}
+.jsQSFoundText em{font-style:normal;color:var(--js-custom-accent,#71389b)}
+.jsQSFields{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.jsQSFormError{
+ font-size:12px;line-height:1.4;border-radius:13px;
+ padding:0;margin:10px 0 0;overflow-wrap:anywhere;
+}
+.jsQSFormError:not(:empty){padding:10px}
+@media(max-width:360px){
+ .jsQSSheet{padding:16px 12px calc(20px + env(safe-area-inset-bottom,0px))}
+ .jsQSHeader{gap:8px}.jsQSHeader h2{font-size:24px}
+ .jsQSFields{gap:7px}
+ #jsQSSoldPrice,#jsQSSoldDate{font-size:14px;padding:11px 8px}
+}

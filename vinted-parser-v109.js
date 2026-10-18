@@ -107,7 +107,7 @@
     const rawSize=labelValue(lines,'Größe');
     const size=cleanSize(rawSize)||cleanSize(title)||link.size||'';
     const brandRaw=labelValue(lines,'Marke');
-    const cleanBrand=String(brandRaw||'').replace(/\s*[:：;；]+\s*$/u,'').trim();
+    const cleanBrand=String(brandRaw||'').replace(/[\s:：;；>›»→➜➔❯〉▸▷▶|〉》]+$/u,'').trim();
     const brand=(cleanBrand&&cleanBrand.length<40?cleanBrand:'')||link.brand;
     const condition=conditionValue(labelValue(lines,'Zustand'));
     const rawColor=labelValue(lines,'Farbe');
@@ -117,7 +117,7 @@
     return {
       title,price:sellerPrice(lines),brand,size,condition,color,category:categoryFromTitle(title),
       uploadedRelative:relativeUpload,onlineSince:'',listingId:link.id,
-      warnings:[...(relativeUpload?['Online seit nur relativ angegeben ('+relativeUpload+'). Genaues Datum bitte selbst ergänzen.']:[])]
+      warnings:[...(relativeUpload?['Einstelldatum nur ungefähr ('+relativeUpload+'). Bei Bedarf ergänzen.']:[])]
     };
   }
   window.JennySellsVintedParser={parse,fromUrl};

@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.10-test';
+  const VERSION='0.10.11-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=1;
   const IMAGE_STORE='images';
@@ -67,8 +67,8 @@
       .jsImportBg{display:none;position:fixed;inset:0;z-index:110;background:#21182566;align-items:flex-end}.jsImportBg.show{display:flex}
       .jsImportSheet{width:min(100%,520px);max-height:91vh;overflow:auto;margin:auto;background:#fff;border-radius:26px 26px 0 0;padding:18px 16px 28px;box-shadow:0 -12px 35px #2b1a3330}
       .jsImportHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.jsImportHead h2{font:800 22px Georgia,serif;margin:0}.jsImportClose{border:0;width:36px;height:36px;border-radius:50%;background:#f5edf7;color:#71389b;font-size:22px}
-      .jsImportLead{font-size:11px;line-height:1.45;color:#817486;margin:8px 0 12px}
-      .jsImportStep{background:#faf6fb;border:1px solid #eee4ed;border-radius:17px;padding:12px;margin:9px 0}.jsImportStep h3{font:800 15px Georgia,serif;margin:0 0 7px}.jsImportStep p{font-size:10.5px;color:#817486;line-height:1.4;margin:4px 0 9px}
+      .jsImportStep[hidden]{display:none!important}.jsImportLead{font-size:11px;line-height:1.4;color:#817486;margin:5px 0 10px}
+      .jsImportStep{background:#fff;border:1px solid #e9dfe9;border-radius:17px;padding:12px;margin:9px 0}.jsImportStep h3{font:800 15px Georgia,serif;margin:0 0 7px}.jsImportStep p{font-size:10.5px;color:#817486;line-height:1.4;margin:4px 0 9px}
       .jsImportBtn{width:100%;border:0;border-radius:13px;padding:12px;background:#f0e3f5;color:#704289;font-weight:800;text-align:center}.jsImportBtn.primary{background:#71389b;color:#fff}.jsImportBtn:disabled{opacity:.45}
       .jsImportUrl{font-size:10px;word-break:break-all;background:#fff;border:1px solid #eadfee;border-radius:12px;padding:9px;margin-top:8px;color:#62566a}
       .jsPlatform{display:inline-flex;align-items:center;padding:4px 7px;border-radius:99px;background:#f0e3f5;color:#704289;font-size:9px;font-weight:800;margin-bottom:6px}
@@ -100,10 +100,10 @@
     m.className='jsImportBg';
     m.innerHTML=`<div class="jsImportSheet">
       <div class="jsImportHead"><h2>Artikel importieren</h2><button class="jsImportClose" id="jsImportClose">×</button></div>
-      <div class="jsImportLead">Der Ablauf ist auf iPhone und Android bewusst gleich: Angebots-Link kopieren, Screenshots auswählen, genau ein Titelbild festlegen. Unterstützt werden Vinted, eBay, Kleinanzeigen und grundsätzlich auch andere Web-Links.</div>
-      <div class="jsImportStep"><h3>1 · Angebots-Link</h3><p>Kopiere den Link in der Verkaufsplattform und übernimm ihn hier direkt aus der Zwischenablage.</p><button class="jsImportBtn" id="jsReadClipboard">Link aus Zwischenablage übernehmen</button><div class="jsImportUrl" id="jsImportUrl">Noch kein Link übernommen.</div></div>
-      <div class="jsImportStep"><h3>2 · Screenshots</h3><p>Wähle 1 bis mehrere Screenshots desselben Artikels. Alle bleiben während des Imports als Informationsquelle verfügbar.</p><input id="jsShotInput" type="file" accept="image/*" multiple hidden><button class="jsImportBtn" id="jsChooseShots">Screenshots auswählen</button><div id="jsShotStatus" class="jsImportStatus warn">Noch keine Screenshots ausgewählt.</div><div class="jsShots" id="jsShots"></div></div>
-      <div class="jsImportStep"><h3>3 · Titelbild auswählen</h3><p>Aus jedem Screenshot wird ein temporärer Bildausschnitt erzeugt. Wähle genau einen als Titelbild. Nur dieser wird dauerhaft in JennySells gespeichert.</p><div id="jsCoverHint" class="jsImportStatus warn">Zuerst Screenshots auswählen.</div></div>
+      <div class="jsImportLead">Vinted, eBay und Kleinanzeigen: Link + Screenshots.</div>
+      <div class="jsImportStep"><h3>1 · Link</h3><button class="jsImportBtn" id="jsReadClipboard">Link einfügen</button><div class="jsImportUrl" id="jsImportUrl">Noch kein Link</div></div>
+      <div class="jsImportStep"><h3>2 · Screenshots</h3><input id="jsShotInput" type="file" accept="image/*" multiple hidden><button class="jsImportBtn" id="jsChooseShots">Bilder auswählen</button><div id="jsShotStatus" class="jsImportStatus warn">Keine Bilder ausgewählt</div><div class="jsShots" id="jsShots"></div></div>
+      <div class="jsImportStep" id="jsLegacyCoverStep" hidden><h3>Legacy-Titelbild</h3><div id="jsCoverHint" class="jsImportStatus warn"></div></div>
       <button class="jsImportBtn primary" id="jsContinueImport" disabled>Mit ausgewähltem Titelbild weiter</button>
     </div>`;
     document.body.appendChild(m);
@@ -134,14 +134,14 @@
     selectedCandidate=0;
     if(q('#jsShotInput'))q('#jsShotInput').value='';
     if(q('#jsShots'))q('#jsShots').innerHTML='';
-    if(q('#jsShotStatus')){q('#jsShotStatus').className='jsImportStatus warn';q('#jsShotStatus').textContent='Noch keine Screenshots ausgewählt.'}
-    if(q('#jsCoverHint')){q('#jsCoverHint').className='jsImportStatus warn';q('#jsCoverHint').textContent='Zuerst Screenshots auswählen.'}
+    if(q('#jsShotStatus')){q('#jsShotStatus').className='jsImportStatus warn';q('#jsShotStatus').textContent='Keine Bilder ausgewählt.'}
+    if(q('#jsCoverHint')){q('#jsCoverHint').className='jsImportStatus warn';q('#jsCoverHint').textContent='Bilder auswählen.'}
     if(q('#jsContinueImport'))q('#jsContinueImport').disabled=true;
   }
 
   function openImport(){
     resetImport();
-    q('#jsImportUrl').textContent='Noch kein Link übernommen.';
+    q('#jsImportUrl').textContent='Noch kein Link';
     q('#jsImportUrl').dataset.url='';
     q('#jsImportUrl').dataset.source='';
     q('#jsImportBg').classList.add('show');
@@ -359,15 +359,15 @@
         setTimeout(applyCovers,0);
       };
     }
-    const delBtn=q('#deleteItem');
+    const delBtn=q('#confirmDelete');
     if(delBtn&&!delBtn.dataset.v100){
       delBtn.dataset.v100='1';
       const previous=delBtn.onclick;
       delBtn.onclick=e=>{
         const id=q('#editId')?.value;
         const item=typeof items!=='undefined'?items.find(x=>x.id===id):null;
-        if(item?.coverImageKey)deleteImage(item.coverImageKey).catch(()=>{});
         if(previous)previous.call(delBtn,e);
+        if(item?.coverImageKey)deleteImage(item.coverImageKey).catch(()=>{});
         setTimeout(applyCovers,0);
       };
     }

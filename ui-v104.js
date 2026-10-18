@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.10-test';
+  const VERSION='0.10.11-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=1;
   const IMAGE_STORE='images';
@@ -26,13 +26,16 @@
       .jsV104Input{width:100%;border:1px solid #eadfee;border-radius:12px;padding:11px 12px;background:#fff;color:#3f3344;margin-top:8px}
       .jsV104Row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:8px}
       .jsV104SmallBtn{border:0;border-radius:12px;padding:11px 13px;background:#f0e3f5;color:#704289;font-weight:800;white-space:nowrap}
-      .jsV104Box{margin-top:10px;padding:11px;border:1px solid #e6d9eb;border-radius:15px;background:#fff}
-      .jsV104Box.hidden{display:none}.jsV104Box h4{margin:0 0 6px;font:800 15px Georgia,serif;color:#573b66}
-      .jsV104Help{font-size:10px;line-height:1.45;color:#817486;margin:4px 0 9px}
+      .jsV104Box{margin:9px 0;padding:12px;border:1px solid #e9dfe9;border-radius:17px;background:#fff}
+      .jsV104Box.hidden{display:none}.jsV104Box h4{margin:0 0 8px;font:800 15px Georgia,serif;color:#573b66}
+      .jsV104Help{font-size:10.5px;line-height:1.4;color:#817486;margin:0 0 9px}
       .jsV104Progress{font-size:10.5px;border-radius:12px;padding:9px;background:#fff4e5;color:#8d621f;margin-top:8px}
       .jsV104Progress.ok{background:#edf8f1;color:#277147}.jsV104Progress.busy{background:#f5edf7;color:#704289}
-      .jsV104Result{display:grid;grid-template-columns:66px 1fr;gap:6px 10px;margin-top:9px;padding:10px;border-radius:12px;background:#faf6fb;font-size:10.5px}
-      .jsV104Result b{color:#5b4563}.jsV104Result span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .jsV104Result{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:9px;padding:11px;border-radius:12px;background:#faf6fb;font-size:11px}
+      .jsV104Field{min-width:0}.jsV104Field.wide{grid-column:1/-1}.jsV104Field b{display:block;color:#817486;font-size:9px;margin:0 0 2px}
+      .jsV104Field span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#382b40}
+      .jsV104Field.wide span{white-space:normal;line-height:1.35}
+      .jsOcrHint{grid-column:1/-1;color:#95671f;font-size:10px;line-height:1.35}
       .jsCropWrap{margin-top:10px}.jsCropViewport{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:18px;background:#221b26;touch-action:none;user-select:none;-webkit-user-select:none}
       .jsCropViewport img{position:absolute;left:50%;top:50%;max-width:none;max-height:none;transform-origin:center center;pointer-events:none;will-change:transform}
       .jsCropFrame{position:absolute;inset:0;border:2px solid #fff9;box-shadow:inset 0 0 0 1px #0003;pointer-events:none;border-radius:18px}
@@ -71,7 +74,7 @@
     const urlBox=q('#jsImportUrl');
     if(urlBox&&!q('#jsManualUrl')){
       const row=document.createElement('div');
-      row.innerHTML=`<input id="jsManualUrl" class="jsV104Input" type="url" inputmode="url" autocapitalize="off" autocomplete="off" placeholder="Link hier einfügen (iPhone / Android)"><div class="jsV104Row"><span class="jsV104Help">Auf iPhone den kopierten Link einfach in dieses Feld einfügen.</span><button id="jsApplyManualUrl" class="jsV104SmallBtn" type="button">Link übernehmen</button></div>`;
+      row.innerHTML=`<input id="jsManualUrl" class="jsV104Input" type="url" inputmode="url" autocapitalize="off" autocomplete="off" placeholder="Link alternativ einfügen"><div class="jsV104Row"><span class="jsV104Help">Oder Link manuell eingeben</span><button id="jsApplyManualUrl" class="jsV104SmallBtn" type="button">Übernehmen</button></div>`;
       urlBox.insertAdjacentElement('beforebegin',row);
       q('#jsApplyManualUrl').onclick=applyManualUrl;
     }
@@ -80,8 +83,8 @@
     if(status&&!q('#jsV104Ocr')){
       const box=document.createElement('div');
       box.id='jsV104Ocr';box.className='jsV104Box hidden';
-      box.innerHTML=`<h4>1 · Text erkennen</h4><div class="jsV104Help">Zuerst liest JennySells Angebotstitel, Verkäuferpreis, Größe und weitere Artikeldetails aus den unveränderten Screenshots. Erst danach stellst du das Titelbild selbst ein.</div><button class="jsImportBtn" id="jsV104RunOcr" type="button">🔎 Titel & Preis erkennen</button><div class="jsV104Progress" id="jsV104Progress">Screenshots auswählen.</div><div class="jsV104Result hidden" id="jsV104Result"></div>`;
-      status.insertAdjacentElement('afterend',box);
+      box.innerHTML=`<h4>3 · Daten erkennen</h4><div class="jsV104Help">Titel, Preis und Artikeldetails automatisch auslesen.</div><button class="jsImportBtn" id="jsV104RunOcr" type="button">🔎 Daten erkennen</button><div class="jsV104Progress" id="jsV104Progress">Bilder auswählen</div><div class="jsV104Result hidden" id="jsV104Result"></div>`;
+      (status.closest('.jsImportStep')||status).insertAdjacentElement('afterend',box);
       q('#jsV104RunOcr').onclick=runOcr;
     }
 
@@ -95,13 +98,13 @@
       if(cont){
         const crop=document.createElement('div');
         crop.id='jsV104Crop';crop.className='jsV104Box hidden';
-        crop.innerHTML=`<h4>2 · Titelbild einstellen</h4><div class="jsV104Help">Bild mit dem Finger verschieben und mit dem Regler zoomen. Gespeichert wird exakt der sichtbare Ausschnitt.</div><select id="jsCropSelect" class="jsCropSelect"></select><div class="jsCropWrap"><div id="jsCropViewport" class="jsCropViewport"><img id="jsCropImg" alt="Bildausschnitt"><div class="jsCropFrame"></div><div class="jsCropHint">Ziehen zum Verschieben</div></div><div class="jsZoomRow"><span>−</span><input id="jsCropZoom" type="range" min="1" max="3" value="1" step="0.01"><span>＋</span></div><button id="jsCropConfirm" class="jsCropConfirm" type="button">Bildausschnitt übernehmen</button><div id="jsCropStatus" class="jsV104Progress">Zuerst Texterkennung durchführen.</div></div>`;
+        crop.innerHTML=`<h4>4 · Titelbild festlegen</h4><div class="jsV104Help">Ausschnitt verschieben oder zoomen. Nur dieses Bild wird gespeichert.</div><select id="jsCropSelect" class="jsCropSelect"></select><div class="jsCropWrap"><div id="jsCropViewport" class="jsCropViewport"><img id="jsCropImg" alt="Bildausschnitt"><div class="jsCropFrame"></div><div class="jsCropHint">Ziehen zum Verschieben</div></div><div class="jsZoomRow"><span>−</span><input id="jsCropZoom" type="range" min="1" max="3" value="1" step="0.01"><span>＋</span></div><button id="jsCropConfirm" class="jsCropConfirm" type="button">Bildausschnitt übernehmen</button><div id="jsCropStatus" class="jsV104Progress">Zuerst Texterkennung durchführen.</div></div>`;
         cont.insertAdjacentElement('beforebegin',crop);
         q('#jsCropSelect').onchange=()=>{cropIndex=Number(q('#jsCropSelect').value)||0;manualCropBlob=null;openCropImage()};
         q('#jsCropZoom').oninput=()=>{cropState.zoom=Number(q('#jsCropZoom').value)||1;clampCrop();renderCrop();manualCropBlob=null;setCropStatus('Bildausschnitt geändert – bitte erneut übernehmen.','')};
         q('#jsCropConfirm').onclick=confirmCrop;
         setupCropPointer();
-        cont.textContent='Mit Bildausschnitt weiter';
+        cont.textContent='Artikel übernehmen';
         cont.addEventListener('click',guardContinue,true);
       }
     }
@@ -133,7 +136,7 @@
     const u=q('#jsManualUrl');if(u)u.value='';
     q('#jsV104Ocr')?.classList.add('hidden');q('#jsV104Crop')?.classList.add('hidden');
     const r=q('#jsV104Result');if(r){r.classList.add('hidden');r.innerHTML=''}
-    setProgress('Screenshots auswählen.');setCropStatus('Zuerst Texterkennung durchführen.','');
+    setProgress('Bilder auswählen');setCropStatus('Zuerst Daten erkennen','');
   }
 
   function captureFiles(list){
@@ -142,7 +145,7 @@
     const box=q('#jsV104Ocr');if(box)box.classList.toggle('hidden',!files.length);
     q('#jsV104Crop')?.classList.add('hidden');
     const result=q('#jsV104Result');if(result){result.classList.add('hidden');result.innerHTML=''}
-    setProgress(files.length?`${files.length} Screenshot${files.length===1?'':'s'} bereit. Jetzt Text erkennen.`:'Screenshots auswählen.');
+    setProgress(files.length?`${files.length} Bild${files.length===1?'':'er'} bereit`:'Bilder auswählen');
     const sel=q('#jsCropSelect');if(sel){sel.innerHTML=files.map((f,i)=>`<option value="${i}">Screenshot ${i+1}${f.name?' · '+escapeHtml(f.name):''}</option>`).join('')}
   }
 
@@ -182,7 +185,7 @@
       suggestion=(meta.source==='Vinted'&&window.JennySellsVintedParser?.parse)
         ? window.JennySellsVintedParser.parse(texts,q('#jsImportUrl')?.dataset.url||'')
         : extract(texts.join('\n'));
-      renderSuggestion();ocrDone=true;setProgress('Text erkannt. Jetzt Titelbild selbst einstellen.','ok');
+      renderSuggestion();ocrDone=true;setProgress('Daten erkannt ✓','ok');
       q('#jsV104Crop')?.classList.remove('hidden');cropIndex=0;if(q('#jsCropSelect'))q('#jsCropSelect').value='0';await openCropImage();
     }catch(e){setProgress(e.message||'Texterkennung fehlgeschlagen.','');}
     finally{btn.disabled=false}
@@ -191,8 +194,8 @@
     const r=q('#jsV104Result');if(!r||!suggestion)return;
     const euro=suggestion.price===null?'–':suggestion.price.toLocaleString('de-DE',{maximumFractionDigits:2})+' €';
     const fields=[['Titel',suggestion.title],['Preis',euro],['Größe',suggestion.size],['Marke',suggestion.brand],['Kategorie',suggestion.category],['Zustand',suggestion.condition],['Farbe',suggestion.color],['Online seit',suggestion.uploadedRelative?'ca. '+suggestion.uploadedRelative:'']];
-    r.innerHTML=fields.map(([label,value])=>`<b>${escapeHtml(label)}</b><span>${escapeHtml(value||'–')}</span>`).join('');
-    if(suggestion.warnings?.length)r.insertAdjacentHTML('beforeend',suggestion.warnings.map(w=>`<div style="grid-column:1/-1;color:#95671f">${escapeHtml(w)}</div>`).join(''));
+    r.innerHTML=fields.map(([label,value])=>`<div class="jsV104Field${label==='Titel'?' wide':''}"><b>${escapeHtml(label)}</b><span>${escapeHtml(value||'–')}</span></div>`).join('');
+    if(suggestion.warnings?.length)r.insertAdjacentHTML('beforeend',suggestion.warnings.map(w=>`<div class="jsOcrHint">${escapeHtml(w)}</div>`).join(''));
     r.classList.remove('hidden');
   }
   function setProgress(text,state=''){const e=q('#jsV104Progress');if(e){e.textContent=text;e.className='jsV104Progress'+(state?' '+state:'')}}

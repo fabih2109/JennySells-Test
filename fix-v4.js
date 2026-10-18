@@ -56,12 +56,30 @@ function collect(){let old=items.find(x=>x.id===$('#editId').value)||blank();ret
 function parseShare(){const qp=new URLSearchParams(location.search);let incoming=[qp.get('title'),qp.get('text'),qp.get('url')].filter(Boolean).join('\n');if(!incoming)return;const um=incoming.match(/https?:\/\/[^\s]+/i);let url=um?um[0]:'';let t=(incoming.split(url)[0]||'').replace(/\|\s*Vinted\s*$/i,'').trim();let idm=url.match(/\/items\/(\d+)-?([^/?#]*)/i);let slug=idm&&idm[2]?decodeURIComponent(idm[2]).replace(/-/g,' ').replace(/\bgrosse\b/gi,'Größe'):'';if(!t)t=slug;let parts=t.split('|').map(x=>x.trim()).filter(Boolean),size=(t.match(/(?:Größe|Gr\.?)\s*(\d{2,3})/i)||[])[1]||'',brand=parts[0]||'',category=parts.slice(1).filter(p=>!/(Größe|Gr\.)/i.test(p)).join(' / ');let i=blank();i.title=t||'Vinted-Artikel';i.brand=brand;i.size=size;i.category=category;i.source='Vinted';i.url=url;i.onlineSince=today();openEditor(i,'Von Vinted geteilt · Artikel-ID '+(idm?idm[1]:'erkannt'));history.replaceState({},'',location.pathname);}
 
 $('#saveItem').onclick=()=>{let r=collect();let ix=items.findIndex(x=>x.id===r.id);if(ix>=0)items[ix]=r;else items.unshift(r);save();$('#editorBg').classList.remove('show');refresh();go('items');};
-$('#deleteItem').onclick=()=>{items=items.filter(i=>i.id!==$('#editId').value);save();$('#editorBg').classList.remove('show');refresh();};
+function hideDeleteConfirm(){const bg=$('#deleteConfirmBg');bg.hidden=true;$('#deleteItem').focus();}
+$('#deleteItem').onclick=()=>{
+  const bg=$('#deleteConfirmBg'),item=items.find(i=>i.id===$('#editId').value);
+  if(!item)return;
+  $('#jsDeleteConfirmText').textContent='„'+(item.title||'Dieser Artikel')+'“ und das dazugehörige Titelbild wirklich dauerhaft löschen?';
+  bg.hidden=false;$('#cancelDelete').focus();
+};
+$('#cancelDelete').onclick=hideDeleteConfirm;
+$('#deleteConfirmBg').onclick=e=>{if(e.target.id==='deleteConfirmBg')hideDeleteConfirm()};
+$('#confirmDelete').onclick=()=>{
+  const id=$('#editId').value;
+  if(!items.some(i=>i.id===id)){hideDeleteConfirm();return}
+  items=items.filter(i=>i.id!==id);
+  save();$('#deleteConfirmBg').hidden=true;$('#editorBg').classList.remove('show');refresh();
+};
+document.addEventListener('keydown',e=>{
+  const bg=$('#deleteConfirmBg');
+  if(e.key==='Escape'&&bg&&!bg.hidden){e.preventDefault();hideDeleteConfirm()}
+});
 $('#closeEditor').onclick=()=>$('#editorBg').classList.remove('show');
 $('#editorBg').onclick=e=>{if(e.target.id==='editorBg')$('#editorBg').classList.remove('show');};
 $('#fStatus').onchange=syncSale;['#fSoldPrice','#fShipping','#fFees'].forEach(x=>$(x).oninput=calcNet);
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{if(b.dataset.status)$('#statusFilter').value=b.dataset.status;go(b.dataset.go);});
-$('#quickAdd').onclick=$('#navAdd').onclick=()=>openEditor();
+$('#navAdd').onclick=()=>openEditor();
 $('#globalSearch').oninput=()=>{go('items');renderItems();};
 $('#sourceFilter').onchange=renderItems;$('#statusFilter').onchange=renderItems;
 document.addEventListener('click',e=>{let t=e.target.closest('.channelGo');if(t){$('#sourceFilter').value=t.dataset.channel;go('items');}});

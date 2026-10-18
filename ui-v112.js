@@ -52,14 +52,6 @@
     btn.innerHTML='<span class="jsImportSymbol" aria-hidden="true">'+icon('camera')+'</span><span class="jsImportText"><b>Verkaufsartikel importieren</b><span>Link & Screenshots auswerten</span></span><span class="jsImportArrow" aria-hidden="true">›</span>';
     btn.setAttribute('aria-label','Verkaufsartikel importieren');
   }
-  function scanShortcut(){
-    const search=$('.app .search');if(!search||$('#jsScanImport'))return;
-    const btn=document.createElement('button');
-    btn.id='jsScanImport';btn.className='jsScanButton';btn.type='button';
-    btn.setAttribute('aria-label','Artikelimport öffnen');btn.innerHTML=icon('scan');
-    btn.onclick=()=>$('#marketImportLaunch')?.click();
-    search.appendChild(btn);
-  }
   function ensurePages(){
     const app=$('.app');if(!app)return;
     if(!$('#newest')){
@@ -238,7 +230,7 @@
 
   function activate(){
     if(mounted)return;mounted=true;
-    navStyle();metricStyle();scanShortcut();ensurePages();ensureChart();importStyle();
+    navStyle();metricStyle();ensurePages();ensureChart();importStyle();
     newestData();drawChart();renderStatistics();
     if(typeof refresh==='function'&&!refresh.__v112){
       const previous=refresh;const newer=function(...args){const result=previous.apply(this,args);newestData();drawChart();renderStatistics();return result;};

@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.3-test';
+  const VERSION='0.11.4-test';
   const ARCHIVE=[
     {date:'2022-03-12',amount:18},{date:'2022-05-21',amount:27},{date:'2022-08-07',amount:31},{date:'2022-11-18',amount:42},{date:'2022-12-10',amount:27},
     {date:'2023-02-11',amount:35},{date:'2023-04-22',amount:46},{date:'2023-06-18',amount:54},{date:'2023-09-02',amount:63},{date:'2023-11-25',amount:49},{date:'2023-12-09',amount:33},

@@ -36,7 +36,7 @@
       about.innerHTML='<div class="jsAboutCard">'+
         '<div class="jsAboutHeart" aria-hidden="true">♥</div>'+
         '<h3>JennySells</h3><div class="jsAboutMotto">SHOPPING MIT HERZ</div>'+
-        '<div class="jsAboutVersion">Version v0.11.3-test</div>'+
+        '<div class="jsAboutVersion">Version v0.11.4-test</div>'+
         '</div>';
     }
     const menuTitle=q('#settings .jsMoreDetailTop h2');
@@ -99,6 +99,7 @@
     const main=q('#jsViewContent');if(!main)return;
     const source=item.source||'Privat';
     const sold=item.status==='sold',p=item.price===null||item.price===undefined?'–':euro(item.price);
+    const inPackage=sold&&(item.saleType==='package'||item.soldInPackage);
     const status=typeof statusLabel==='function'?statusLabel(item.status||'online'):item.status||'Online';
     const amount=sold?euro(Number(item.soldPrice||0)-Number(item.shipping||0)-Number(item.fees||0)):p;
     const url=(()=>{try{const u=new URL(item.url);return /^https?:$/.test(u.protocol)?u.href:'';}catch{return '';}})();
@@ -108,14 +109,21 @@
       '<div class="jsViewerInfo">'+
        '<div class="jsViewerStatus"><span>'+esc(source)+'</span><span class="jsViewerStatusPill">'+esc(status)+'</span></div>'+
        '<h3>'+esc(item.title||'Unbenannter Artikel')+'</h3>'+
-       '<div class="jsViewerPrice">'+amount+'</div>'+
+       '<div class="jsViewerPrice">'+amount+'</div>'+ 
+       (inPackage?'<div class="jsViewerPackageInfo">📦 Im Paket verkauft · anteiliger Verkaufspreis</div>':'')+
        '<div class="jsViewerData">'+
        detailRow('Marke',item.brand)+detailRow('Größe',item.size)+detailRow('Kategorie',item.category)+
        detailRow('Zustand',item.condition)+detailRow('Farbe',item.color)+
        detailRow('Kanal',source)+detailRow('Status',status)+
        detailRow('Angebotspreis',p)+detailRow('Online seit',fmtDate(item.onlineSince))+
        detailRow('Erstellt am',fmtDate(item.createdAt),true)+
-       (sold?detailRow('Verkaufspreis',euro(item.soldPrice))+detailRow('Verkaufsdatum',fmtDate(item.soldDate))+detailRow('Versand',euro(item.shipping))+detailRow('Gebühren',euro(item.fees)): '')+
+       (sold?detailRow('Verkaufspreis',euro(item.soldPrice))+detailRow('Verkaufsdatum',fmtDate(item.soldDate))+
+        (inPackage?detailRow('Verkaufsart','Paketverkauf')+
+         detailRow('Paketpreis gesamt',euro(item.packageTotalPrice))+
+         detailRow('Angebotspreise gesamt',euro(item.packageOriginalTotal))+
+         detailRow('Artikel im Paket',item.packageItemCount)+
+         detailRow('Paket-Referenz',(item.packageId||'').slice(-12),true):'')+
+         detailRow('Versand',euro(item.shipping))+detailRow('Gebühren',euro(item.fees)): '')+
        '</div>'+
        (item.note?'<div class="jsViewerNote"><h4>Notiz</h4><p>'+esc(item.note).replace(/\n/g,'<br>')+'</p></div>':'')+
        (url?'<a class="jsViewerLink" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Originalanzeige öffnen ↗</a>':'')+

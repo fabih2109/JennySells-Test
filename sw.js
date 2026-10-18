@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v40';
+const CACHE='jennysells-test-v41';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,
@@ -25,8 +25,8 @@ const ASSETS=[
   ROOT+'data-v117.css',
   ROOT+'ui-v119.js',
   ROOT+'ui-v119.css',
-  ROOT+'quick-sale-v120.js',
-  ROOT+'quick-sale-v120.css',
+  ROOT+'quick-sale-v121.js',
+  ROOT+'quick-sale-v121.css',
   ROOT+'header-art-v112.svg',
   ROOT+'JennySells_Logo_Final_17-10-2026_v2.png'
 ];

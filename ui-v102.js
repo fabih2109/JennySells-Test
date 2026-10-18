@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.10.14-test';
+  const VERSION='0.10.15-test';
   const setVersion=()=>{
     const el=document.getElementById('appVersion');
     if(el) el.textContent='v'+VERSION;
@@ -7,10 +7,10 @@
   };
   if(window.JennySellsV104){setVersion();return;}
   const s=document.createElement('script');
-  s.src='/JennySells-Test/ui-v104.js?v=114';
+  s.src='/JennySells-Test/ui-v104.js?v=115';
   s.async=false;
   s.onload=()=>{setVersion();setTimeout(setVersion,900);setTimeout(setVersion,1800);};
-  s.onerror=()=>console.error('JennySells v0.10.14 konnte nicht geladen werden.');
+  s.onerror=()=>console.error('JennySells v0.10.15 konnte nicht geladen werden.');
   document.head.appendChild(s);
   setTimeout(setVersion,1200);
   setTimeout(setVersion,2400);

@@ -116,3 +116,65 @@ html[data-js-theme] .jsChartMode,html[data-js-theme] .jsStatsFilter{
 html[data-js-theme] .jsChartInfo{background:var(--js-custom-accent)!important}
 html[data-js-theme] #home .stat:nth-child(2){border-left-color:var(--js-custom-accent)!important}
 html[data-js-theme] #home .stat:nth-child(2) .metricIcon{background:var(--js-custom-soft)!important;color:var(--js-custom-accent)!important}
+
+
+/* v0.11.1 – Jennylicious-inspired Mehr menu with independent subpages. */
+#jsMoreLanding[hidden],#jsMoreDetail[hidden],.jsMorePanel[hidden]{display:none!important}
+#settings:has(#jsDataSettings){padding-bottom:20px}
+.jsMoreLanding{padding:2px 0 16px}
+.jsMoreWelcome{margin:3px 0 22px}
+.jsMoreWelcome h1{font:800 clamp(28px,7vw,37px) Georgia,serif;line-height:1.15;margin:0 0 6px;color:#281c33}
+.jsMoreWelcome p{font-size:12px;line-height:1.4;margin:0;color:#817387}
+.jsMoreMenu{display:flex;flex-direction:column;gap:10px}
+.jsMoreMenu button{
+ width:100%;min-height:63px;border:0;border-radius:19px;
+ display:grid;grid-template-columns:40px minmax(0,1fr) 17px;
+ align-items:center;column-gap:12px;
+ text-align:left;padding:12px 15px;
+ background:rgba(255,255,255,.96);color:#241d2b;
+ box-shadow:0 6px 18px rgba(66,42,92,.055);
+ font-size:clamp(14px,4vw,16px);font-weight:750;line-height:1.18;
+}
+.jsMoreMenu button:active{transform:scale(.994);background:var(--js-custom-soft)}
+.jsMoreGlyph{display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:500;color:var(--js-custom-accent)}
+.jsMoreChevron{font-size:23px;color:#998a9e;text-align:right;font-weight:450}
+.jsMoreDetail{padding:2px 0 16px}
+.jsMoreDetailTop{margin:0 0 10px}
+.jsMoreDetailTop button{
+ background:none;color:var(--js-custom-accent);border:none;
+ margin:0 0 8px;padding:8px 8px 8px 0;text-align:left;
+ font-size:14px;font-weight:750;
+}
+.jsMoreDetailTop h2{font:800 clamp(24px,6.5vw,31px) Georgia,serif;margin:0 0 6px;color:#281c33;line-height:1.16}
+.jsMoreSubtitle{font-size:12px;color:#817387;margin:0;line-height:1.4}
+.jsMorePanel .jsDataCard{margin-top:12px}
+.jsMorePanel .jsDataCard h3{font-size:20px}
+.jsMorePanel .settingsCard{margin:13px 0;border-radius:20px}
+.jsMorePanel #resetDemoSettings{width:100%;margin-top:12px}
+.jsMorePanel .note{margin-top:13px}
+.jsDataAdvanced{
+ border-top:1px solid #ecdfef;margin-top:13px;padding-top:12px;
+ color:#4c3954;
+}
+.jsDataAdvanced summary{
+ color:var(--js-custom-dark);font-weight:800;font-size:13px;
+ padding:9px 5px;cursor:pointer;
+}
+.jsDataAdvanced p{
+ margin:6px 0 12px;line-height:1.5;
+ font-size:11.5px;color:#87778d;
+}
+.jsDataAdvanced .jsDataAction{background:#f9f5fa;border-color:#e9ddec}
+.jsMoreInfoRow{
+ display:flex;justify-content:space-between;gap:12px;
+ align-items:flex-start;padding:11px 0;border-bottom:1px solid #efe6f0;
+ font-size:12px;
+}
+.jsMoreInfoRow span{color:#817486}
+.jsMoreInfoRow strong{color:#342340;text-align:right;overflow-wrap:anywhere}
+.jsMorePanel[data-more-panel="about"] .jsDataCard p:last-child{margin-top:16px}
+@media(max-width:360px){
+ .jsMoreMenu button{grid-template-columns:31px minmax(0,1fr) 12px;column-gap:8px;min-height:60px;padding:10px}
+ .jsMoreGlyph{font-size:20px}
+ .jsMoreChevron{font-size:20px}
+}

@@ -234,26 +234,108 @@ function applyTheme(choice,save=true){
  q('#jsThemeChoices')?.querySelectorAll('button').forEach(b=>b.classList.toggle('selected',b.dataset.theme===theme));
  if(save)transact(['settings'],tx=>tx.objectStore('settings').put({key:'theme',value:theme})).catch(e=>notify(e.message,true));
 }
+const MORE_SECTIONS={
+ backup:{title:'Export / Backup',subtitle:'Vollständige Sicherungen und Wiederherstellung'},
+ categories:{title:'Standard-Kategorien',subtitle:'Kategorien verwalten und Dubletten vermeiden'},
+ design:{title:'Design',subtitle:'Farbdesign und Hintergrund wählen'},
+ app:{title:'App-Einstellungen',subtitle:'Version, lokaler Speicher und Demo-Daten'},
+ about:{title:'Über JennySells',subtitle:'Deine Artikelübersicht mit Herz'}
+};
+let currentMoreSection='';
+function openMoreSection(section){
+ if(!MORE_SECTIONS[section])return;
+ const landing=q('#jsMoreLanding'),detail=q('#jsMoreDetail');
+ if(!landing||!detail)return;
+ currentMoreSection=section;landing.hidden=true;detail.hidden=false;
+ detail.querySelector('h2').textContent=MORE_SECTIONS[section].title;
+ detail.querySelector('.jsMoreSubtitle').textContent=MORE_SECTIONS[section].subtitle;
+ detail.querySelectorAll('.jsMorePanel').forEach(p=>p.hidden=p.dataset.morePanel!==section);
+ if(section==='categories')renderCategories();
+ if(section==='design')applyTheme(theme,false);
+ if(section==='backup'&&statusMessage){
+  const status=q('#jsDataStatus');if(status)status.textContent=statusMessage;
+ }
+ window.scrollTo({top:0,behavior:'auto'});
+}
+function closeMoreSection(){
+ currentMoreSection='';
+ const landing=q('#jsMoreLanding'),detail=q('#jsMoreDetail');
+ if(landing)landing.hidden=false;
+ if(detail)detail.hidden=true;
+ window.scrollTo({top:0,behavior:'auto'});
+}
 function createSettings(){
- let sec=q('#settings');if(!sec)return;
- if(q('#jsDataSettings'))return;
- const el=document.createElement('div');el.id='jsDataSettings';
- el.innerHTML=
-  '<div class="jsDataCard"><h3>🎨 Design</h3><p>Wie bei Jennylicious. Standard: Lila mit Flieder-Hintergrund.</p><div class="jsThemeChoices" id="jsThemeChoices">'+Object.entries(THEMES).map(([id,x])=>
-  '<button type="button" data-theme="'+id+'" style="--theme-color:'+x.accent+';--theme-light:'+x.soft+'"><i></i>'+x.name+'</button>').join('')+'</div></div>'+
-  '<div class="jsDataCard"><h3>🏷️ Standard-Kategorien</h3><p>Neue Kategorien aus Artikeln und Vinted-Importen werden hier automatisch ergänzt. Ähnliche Namen werden vor dem Speichern geprüft.</p><div class="jsCategoryList" id="jsCategoryList"></div><div class="jsAddCategory"><input id="jsCategoryNew" placeholder="Neue Kategorie …" maxlength="80"><button id="jsCategoryAdd" type="button">Hinzufügen</button></div></div>'+
-  '<div class="jsDataCard"><h3>💾 Datenbank & Sicherung</h3><p>Artikel, Kategorien und Einstellungen liegen in IndexedDB. Titelbilder werden dort ebenfalls lokal gespeichert. Keine Cloud-Synchronisation.</p><div class="jsDataStatus" id="jsDataStatus"></div><button class="jsDataAction primary" type="button" id="jsBackupExport">📦 Komplett-Backup erstellen (.zip)</button><button class="jsDataAction" type="button" id="jsBackupRestore">↙ Komplett-Backup wiederherstellen</button><button class="jsDataAction" type="button" id="jsLocalBackups">🛟 Lokale Tages-Sicherungen (bis 7 Tage)</button><button class="jsDataAction" type="button" id="jsJsonExport">⇧ Artikel als JSON exportieren</button><button class="jsDataAction" type="button" id="jsJsonImport">⇩ Artikel aus JSON importieren</button><div class="jsDataFoot">ZIP enthält Artikel, Original-Links, Status, Verkäufe, Kategorien, Design und sämtliche lokal gespeicherten Titelbilder. JSON dient dem Austausch ohne Bilder. Backups bitte außerhalb des Geräts aufbewahren.</div></div>';
- sec.appendChild(el);
+ const sec=q('#settings');if(!sec||q('#jsDataSettings'))return;
+ const originalCard=sec.querySelector('.settingsCard');
+ const demoReset=q('#resetDemoSettings'),oldNote=sec.querySelector(':scope > .note');
+ sec.querySelector(':scope > .hero')?.remove();
+ const wrap=document.createElement('div');wrap.id='jsDataSettings';
+ wrap.innerHTML=
+ '<div class="jsMoreLanding" id="jsMoreLanding">'+
+  '<div class="jsMoreWelcome"><h1>Mehr</h1><p>Alles rund um deine JennySells-App</p></div>'+
+  '<div class="jsMoreMenu">'+
+   '<button type="button" data-more-action="import"><span class="jsMoreGlyph">↓</span><span>Verkaufsartikel importieren</span><span class="jsMoreChevron">›</span></button>'+
+   '<button type="button" data-more-section="backup"><span class="jsMoreGlyph">↑</span><span>Export / Backup</span><span class="jsMoreChevron">›</span></button>'+
+   '<button type="button" data-more-section="categories"><span class="jsMoreGlyph">☷</span><span>Standard-Kategorien</span><span class="jsMoreChevron">›</span></button>'+
+   '<button type="button" data-more-section="design"><span class="jsMoreGlyph">◉</span><span>Design</span><span class="jsMoreChevron">›</span></button>'+
+   '<button type="button" data-more-section="app"><span class="jsMoreGlyph">⚙</span><span>App-Einstellungen</span><span class="jsMoreChevron">›</span></button>'+
+   '<button type="button" data-more-section="about"><span class="jsMoreGlyph">ⓘ</span><span>Über JennySells</span><span class="jsMoreChevron">›</span></button>'+
+  '</div></div>'+
+ '<div class="jsMoreDetail" id="jsMoreDetail" hidden>'+
+  '<div class="jsMoreDetailTop"><button type="button" id="jsMoreBack" aria-label="Zurück zu Mehr">‹ Mehr</button><h2></h2><p class="jsMoreSubtitle"></p></div>'+
+  '<div class="jsMorePanel" data-more-panel="backup" hidden>'+
+   '<div class="jsDataCard"><h3>💾 Datenbank & Sicherung</h3><p>Vollständiges ZIP-Backup mit sämtlichen Artikeln und lokal gespeicherten Titelbildern. Zum Wechseln des Geräts oder nach einer Neuinstallation ZIP importieren.</p>'+
+    '<div class="jsDataStatus" id="jsDataStatus" aria-live="polite"></div>'+
+    '<button class="jsDataAction primary" type="button" id="jsBackupExport">📦 Komplett-Backup erstellen (.zip)</button>'+
+    '<button class="jsDataAction" type="button" id="jsBackupRestore">↙ Komplett-Backup wiederherstellen</button>'+
+    '<button class="jsDataAction" type="button" id="jsLocalBackups">🛟 Lokale Tages-Sicherungen (bis 7 Tage)</button>'+
+    '<div class="jsDataFoot">Das ZIP enthält Artikel, Kategorien, Design, Verkaufshistorie, Original-Links und Titelbilder. Backups außerhalb der App speichern – am besten auch auf einem zweiten Gerät oder in einem privaten Cloud-Ordner.</div>'+
+    '<details class="jsDataAdvanced" id="jsDataAdvanced"><summary>Weitere Optionen: JSON-Datenaustausch</summary><p>Nur für den gezielten Austausch von Artikeldaten. JSON enthält keine Bilddateien und ersetzt kein Komplett-Backup. Bestehende Artikel-IDs werden beim Import übersprungen.</p>'+
+      '<button class="jsDataAction" type="button" id="jsJsonExport">⇧ Artikel als JSON exportieren (ohne Bilder)</button>'+
+      '<button class="jsDataAction" type="button" id="jsJsonImport">⇩ Artikel aus JSON importieren (ohne Bilder)</button>'+
+    '</details>'+
+   '</div></div>'+
+  '<div class="jsMorePanel" data-more-panel="categories" hidden>'+
+   '<div class="jsDataCard"><h3>🏷️ Standard-Kategorien</h3><p>Kategorien bearbeiten, ergänzen oder umbenennen. Beim Erstellen und Importieren eines Artikels werden neue Kategorien übernommen und ähnliche Bezeichnungen vorher geprüft.</p>'+
+    '<div class="jsCategoryList" id="jsCategoryList"></div>'+
+    '<div class="jsAddCategory"><input id="jsCategoryNew" placeholder="Neue Kategorie …" maxlength="80" aria-label="Neue Kategorie"><button id="jsCategoryAdd" type="button">Hinzufügen</button></div>'+
+   '</div></div>'+
+  '<div class="jsMorePanel" data-more-panel="design" hidden>'+
+   '<div class="jsDataCard"><h3>🎨 Design auswählen</h3><p>Standard ist Lila mit Flieder-Hintergrund. Das Design wird auf diesem Gerät gespeichert.</p>'+
+    '<div class="jsThemeChoices" id="jsThemeChoices">'+Object.entries(THEMES).map(([id,x])=>
+      '<button type="button" data-theme="'+id+'" style="--theme-color:'+x.accent+';--theme-light:'+x.soft+'"><i></i>'+x.name+'</button>').join('')+'</div>'+
+   '</div></div>'+
+  '<div class="jsMorePanel" data-more-panel="app" id="jsMoreAppPanel" hidden></div>'+
+  '<div class="jsMorePanel" data-more-panel="about" hidden>'+
+   '<div class="jsDataCard"><h3>♥ JennySells</h3><p>Shopping mit Herz: Verkaufsartikel aus Vinted, Kleinanzeigen, eBay, Basar und weiteren Kanälen an einem Ort verwalten.</p>'+
+    '<div class="jsMoreInfoRow"><span>Version</span><strong>v0.11.1-test</strong></div>'+
+    '<div class="jsMoreInfoRow"><span>Datenhaltung</span><strong>IndexedDB, lokal</strong></div>'+
+    '<div class="jsMoreInfoRow"><span>Synchronisierung</span><strong>Keine Cloud-Synchronisation</strong></div>'+
+    '<p>Du kontrollierst deine Daten. Sichere die App regelmäßig über „Export / Backup“ als ZIP-Datei.</p>'+
+   '</div></div>'+
+ '</div>';
+ sec.appendChild(wrap);
+ const appPanel=q('#jsMoreAppPanel');
+ if(originalCard)appPanel.appendChild(originalCard);
+ if(demoReset)appPanel.appendChild(demoReset);
+ if(oldNote)appPanel.appendChild(oldNote);
+ q('#jsMoreLanding').querySelectorAll('[data-more-section]').forEach(b=>b.onclick=()=>openMoreSection(b.dataset.moreSection));
+ q('[data-more-action="import"]').onclick=()=>{
+  const launch=q('#marketImportLaunch');
+  if(launch)launch.click();
+  else notify('Verkaufsartikel-Import konnte nicht geöffnet werden. Bitte die Startseite prüfen.',true);
+ };
+ q('#jsMoreBack').onclick=closeMoreSection;
  q('#jsThemeChoices').querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
  q('#jsCategoryAdd').onclick=addCategoryFromSettings;
  q('#jsCategoryNew').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addCategoryFromSettings();}});
  q('#jsBackupExport').onclick=exportZip;
  q('#jsBackupRestore').onclick=()=>{q('#jsBackupInput').value='';q('#jsBackupInput').click();};
- q('#jsJsonExport').onclick=exportJson;
  q('#jsLocalBackups').onclick=showLocalBackups;
+ q('#jsJsonExport').onclick=exportJson;
  q('#jsJsonImport').onclick=()=>{q('#jsJsonInput').value='';q('#jsJsonInput').click();};
  renderCategories();applyTheme(theme,false);
- if(statusMessage)notify(statusMessage);
+ if(statusMessage){const status=q('#jsDataStatus');if(status)status.textContent=statusMessage;}
 }
 function mount(){
  if(!q('#jsDataDialog')){
@@ -269,7 +351,7 @@ function mount(){
  createSettings();
  if(q('#settings')&&typeof go==='function'&&!go.__jsDBSettings){
   const previous=go;
-  const wrapped=function(id,...args){const result=previous.call(this,id,...args);if(id==='settings'){createSettings();renderCategories();}return result;};
+  const wrapped=function(id,...args){const result=previous.call(this,id,...args);if(id==='settings'){createSettings();closeMoreSection();}return result;};
   wrapped.__jsDBSettings=true;go=wrapped;
  }
 }
@@ -299,7 +381,7 @@ function askRestoreLocal(safety){
 async function exportJson(){
  try{
   await writeChain;
-  const payload={format:'JennySellsArticles',formatVersion:1,appVersion:'0.11.0-test',createdAt:new Date().toISOString(),articles:await all('articles'),categories,settings:{theme}};
+  const payload={format:'JennySellsArticles',formatVersion:1,appVersion:'0.11.1-test',createdAt:new Date().toISOString(),articles:await all('articles'),categories,settings:{theme}};
   const f=new File([JSON.stringify(payload,null,2)],'JennySells_Artikel_'+new Date().toISOString().slice(0,10)+'.json',{type:'application/json'});
   offerFile(f,'JSON-Export ohne Titelbilder');
  }catch(e){notify('JSON-Export fehlgeschlagen: '+e.message,true);}
@@ -375,7 +457,7 @@ async function exportZip(){
    manifest.push({key:entry.key,ref,type:blob.type,createdAt:entry.createdAt||''});
    files.push({name:ref,data:blob});
   });
-  const json={format:'JennySellsBackup',formatVersion:1,appVersion:'0.11.0-test',dbVersion:DB_VERSION,createdAt:new Date().toISOString(),articles,categories,settings:{theme},images:manifest};
+  const json={format:'JennySellsBackup',formatVersion:1,appVersion:'0.11.1-test',dbVersion:DB_VERSION,createdAt:new Date().toISOString(),articles,categories,settings:{theme},images:manifest};
   const zip=await zipStore([{name:'backup.json',data:new TextEncoder().encode(JSON.stringify(json))},...files]);
   offerFile(new File([zip],'JennySells_Backup_'+new Date().toISOString().slice(0,10)+'.zip',{type:'application/zip'}),'Komplett-Backup ZIP');
  }catch(e){notify('Backup fehlgeschlagen: '+e.message,true);}

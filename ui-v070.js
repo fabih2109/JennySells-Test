@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.7-test';
+  const VERSION='0.11.8-test';
   const ARCHIVE=[
     {date:'2022-03-12',amount:18},{date:'2022-05-21',amount:27},{date:'2022-08-07',amount:31},{date:'2022-11-18',amount:42},{date:'2022-12-10',amount:27},
     {date:'2023-02-11',amount:35},{date:'2023-04-22',amount:46},{date:'2023-06-18',amount:54},{date:'2023-09-02',amount:63},{date:'2023-11-25',amount:49},{date:'2023-12-09',amount:33},
@@ -76,8 +76,64 @@
   function monthSeries(){const now=new Date(2026,9,1),sales=allChartSales(),pts=[],labs=[];for(let k=11;k>=0;k--){const d=new Date(now.getFullYear(),now.getMonth()-k,1),key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');pts.push(sales.filter(s=>s.date.startsWith(key)).reduce((a,s)=>a+s.amount,0));labs.push(d.toLocaleDateString('de-DE',{month:'short'}).replace('.',''));}return {pts,labs};}
   function yearSeries(){const sales=allChartSales(),years=[2022,2023,2024,2025,2026];return {labs:years.map(String),pts:years.map(y=>sales.filter(s=>s.date.startsWith(String(y))).reduce((a,s)=>a+s.amount,0))};}
 
-  function openMetric(title,html){ensureModal();document.getElementById('jsMetricTitle').textContent=title;document.getElementById('jsMetricBody').innerHTML=html;document.getElementById('jsMetricModal').classList.add('show');document.querySelectorAll('#jsMetricBody .itemOpen').forEach(b=>b.onclick=()=>{document.getElementById('jsMetricModal').classList.remove('show');if(typeof openEditor==='function'&&typeof items!=='undefined')openEditor(items.find(i=>i.id===b.dataset.id));});}
-  function listHtml(arr){if(!arr.length)return '<div class="note">Keine passenden Artikel.</div>';return `<div class="jsMetricList">${arr.slice(0,8).map(i=>typeof rowHtml==='function'?rowHtml(i):`<div>${i.title}</div>`).join('')}</div>`;}
+  // The four overview dialogs show all matching articles, never just the first eight.
+  const metricEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const metricStatus=s=>({online:'Online',reserved:'Reserviert',sold:'Verkauft',draft:'Entwurf'}[s]||s||'–');
+  function metricItemHtml(item){
+    const net=item.status==='sold'?itemNet(item):Number(item.price||0);
+    const meta=[item.brand,item.size&&'Gr. '+item.size].filter(Boolean).join(' · ');
+    const p=Number.isFinite(net)?fmt(net):'–';
+    const fallback=item.emoji||'👕';
+    const label=metricEscape(item.title||'Artikel');
+    return '<button type="button" class="jsMetricItem" data-id="'+metricEscape(item.id)+'" aria-label="'+label+' ansehen">'+
+      '<span class="jsMetricItemImage"><span class="jsMetricItemFallback" aria-hidden="true">'+metricEscape(fallback)+'</span><img class="jsMetricItemPhoto" alt="" loading="lazy" decoding="async"></span>'+
+      '<span class="jsMetricItemDetails"><strong class="jsMetricItemTitle">'+label+'</strong>'+
+      '<small class="jsMetricItemMeta">'+metricEscape(meta||item.source||'Artikel')+'</small>'+
+      '<span class="jsMetricItemFooter"><b>'+metricEscape(p)+'</b><span class="jsMetricState jsMetricState-'+metricEscape(item.status||'draft')+'">'+metricEscape(metricStatus(item.status))+'</span></span>'+
+      '</span></button>';
+  }
+  function renderMetricThumbnails(){
+    if(!window.JennySellsCovers?.imageForItem||typeof items==='undefined')return;
+    const records=new Map(items.map(item=>[String(item.id),item]));
+    document.querySelectorAll('#jsMetricBody .jsMetricItem').forEach(card=>{
+      const item=records.get(card.dataset.id);
+      if(!item)return;
+      const img=card.querySelector('.jsMetricItemPhoto'),fallback=card.querySelector('.jsMetricItemFallback');
+      if(!img||!fallback)return;
+      window.JennySellsCovers.imageForItem(item).then(result=>{
+        if(!result||!card.isConnected||card.dataset.id!==String(item.id))return;
+        img.onload=()=>{if(!card.isConnected)return;img.classList.add('ready');fallback.hidden=true;};
+        img.onerror=()=>{img.classList.remove('ready');fallback.hidden=false;};
+        img.src=result.src;
+        if(img.complete&&img.naturalWidth>0)img.onload();
+      }).catch(err=>console.warn('JennySells: Kennzahl-Artikelbild',err));
+    });
+  }
+  function openMetric(title,html){
+    ensureModal();
+    const modal=document.getElementById('jsMetricModal');
+    const body=document.getElementById('jsMetricBody');
+    document.getElementById('jsMetricTitle').textContent=title;
+    body.innerHTML=html;
+    const list=body.querySelector('.jsMetricList');
+    modal.classList.toggle('jsMetricArticleDialog',!!list);
+    modal.classList.add('show');
+    if(list)list.scrollTop=0;
+    body.querySelectorAll('.jsMetricItem').forEach(card=>{
+      card.onclick=()=>{
+        const id=card.dataset.id;
+        if(!window.JennySellsViewer?.open)return;
+        modal.classList.remove('show');
+        window.JennySellsViewer.open(id);
+      };
+    });
+    renderMetricThumbnails();
+  }
+  function listHtml(arr){
+    if(!arr.length)return '<div class="jsMetricList jsMetricEmpty"><p class="note">Keine passenden Artikel.</p></div>';
+    return '<div class="jsMetricList" role="list" aria-label="Alle passenden Artikel">'+
+      arr.map(metricItemHtml).join('')+'</div>';
+  }
 
   function bindMetrics(){
     if(typeof items==='undefined')return;

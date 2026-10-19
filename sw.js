@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v44';
+const CACHE='jennysells-test-v45';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,
@@ -29,6 +29,7 @@ const ASSETS=[
   ROOT+'quick-sale-v121.css',
   ROOT+'article-covers-v124.js',
   ROOT+'article-covers-v124.css',
+  ROOT+'metric-grid-v125.css',
   ROOT+'demo-images/article-01.svg',
   ROOT+'demo-images/article-02.svg',
   ROOT+'demo-images/article-03.svg',

@@ -1,0 +1,261 @@
+/* JennySells v0.11.8 – all articles in compact 2-column KPI dialogs.
+   Fixed header and summary; only the article grid scrolls. */
+#jsMetricModal.jsMetricModal {
+ z-index:150!important;
+ align-items:flex-end!important;
+ justify-content:center!important;
+ background:rgba(27,17,34,.48)!important;
+}
+#jsMetricModal.jsMetricModal.show {display:flex!important}
+#jsMetricModal .jsMetricSheet {
+ box-sizing:border-box!important;
+ display:flex!important;
+ flex-direction:column!important;
+ width:min(100%,540px)!important;
+ height:92dvh!important;
+ max-height:calc(100dvh - env(safe-area-inset-top,0px) - 8px)!important;
+ overflow:hidden!important;
+ padding:0!important;
+ margin:0!important;
+ background:linear-gradient(170deg,#fffefa 0%,#fff 60%)!important;
+ border-radius:26px 26px 0 0!important;
+ box-shadow:0 -12px 36px rgba(30,18,43,.22)!important;
+}
+#jsMetricModal .jsMetricHead {
+ box-sizing:border-box!important;
+ flex:0 0 auto!important;
+ display:flex!important;
+ justify-content:flex-start!important;
+ align-items:center!important;
+ gap:13px!important;
+ min-height:83px!important;
+ padding:17px 17px 12px!important;
+ margin:0!important;
+ background:#fffefa!important;
+ border-bottom:1px solid #f3edf2!important;
+ z-index:1;
+}
+#jsMetricModal .jsMetricHead #jsMetricClose {
+ order:-1!important;
+ flex:0 0 45px!important;
+ width:45px!important;
+ height:45px!important;
+ margin:0!important;
+ border-radius:50%!important;
+ background:#fff!important;
+ color:var(--js-custom-accent,#71389b)!important;
+ box-shadow:0 3px 16px rgba(52,29,67,.06)!important;
+}
+#jsMetricModal .jsMetricHead #jsMetricTitle {
+ min-width:0!important;
+ margin:0!important;
+ font:800 clamp(23px,6vw,30px)/1.08 Georgia,serif!important;
+ color:#251930!important;
+ letter-spacing:-.35px!important;
+}
+#jsMetricModal #jsMetricBody {
+ flex:1 1 auto!important;
+ min-height:0!important;
+ display:flex!important;
+ flex-direction:column!important;
+ overflow-y:auto!important;
+ padding:0 16px calc(18px + env(safe-area-inset-bottom,0px))!important;
+ overscroll-behavior:contain;
+ -webkit-overflow-scrolling:touch;
+}
+#jsMetricModal #jsMetricBody:has(> .jsMetricList) {
+ overflow:hidden!important;
+ padding-bottom:0!important;
+}
+#jsMetricModal .jsMetricLead {
+ flex:0 0 auto!important;
+ margin:13px 0 10px!important;
+ color:#817486!important;
+ font-size:12px!important;
+ line-height:1.4!important;
+}
+#jsMetricModal .jsBreakdown {
+ flex:0 0 auto!important;
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:8px!important;
+ margin:0 0 12px!important;
+}
+#jsMetricModal .jsMini {
+ min-width:0!important;
+ border-radius:15px!important;
+ padding:11px 12px!important;
+ background:var(--js-custom-soft,#f7eef9)!important;
+}
+#jsMetricModal .jsMini b {
+ font:800 clamp(17px,5vw,22px)/1.15 Georgia,serif!important;
+ color:var(--js-custom-dark,#572980)!important;
+ overflow-wrap:anywhere;
+}
+#jsMetricModal .jsMini span {
+ display:block!important;
+ font-size:10px!important;
+ line-height:1.25!important;
+ color:#7d7086!important;
+ margin-top:3px!important;
+}
+/* This is the only scroll container in the article KPI dialogs. */
+#jsMetricModal .jsMetricList {
+ flex:1 1 auto!important;
+ min-height:0!important;
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ align-content:start!important;
+ align-items:stretch!important;
+ gap:9px!important;
+ margin:0!important;
+ padding:2px 1px calc(19px + env(safe-area-inset-bottom,0px))!important;
+ overflow-x:hidden!important;
+ overflow-y:auto!important;
+ overscroll-behavior:contain!important;
+ -webkit-overflow-scrolling:touch;
+ scrollbar-width:thin;
+ scrollbar-color:#d9c9dd transparent;
+}
+#jsMetricModal .jsMetricList.jsMetricEmpty {
+ grid-template-columns:1fr!important;
+}
+#jsMetricModal .jsMetricItem {
+ box-sizing:border-box!important;
+ min-width:0!important;
+ width:100%!important;
+ min-height:149px!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:stretch!important;
+ text-align:left!important;
+ gap:6px!important;
+ border:1px solid #f0e6ef!important;
+ border-radius:17px!important;
+ padding:9px!important;
+ margin:0!important;
+ background:#fff!important;
+ color:#2a2034!important;
+ box-shadow:0 5px 16px rgba(53,31,70,.045)!important;
+ cursor:pointer;
+ -webkit-tap-highlight-color:transparent;
+}
+#jsMetricModal .jsMetricItem:active {
+ transform:scale(.992);
+ border-color:var(--js-custom-accent,#71389b)!important;
+}
+#jsMetricModal .jsMetricItem:focus-visible {
+ outline:2px solid var(--js-custom-accent,#71389b);
+ outline-offset:2px;
+}
+#jsMetricModal .jsMetricItemImage {
+ flex:0 0 65px!important;
+ height:65px!important;
+ min-height:65px!important;
+ width:100%!important;
+ position:relative!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ overflow:hidden!important;
+ border-radius:11px!important;
+ background:var(--js-custom-soft,#f4eaf7)!important;
+}
+#jsMetricModal .jsMetricItemFallback {
+ font-size:30px!important;
+ line-height:1!important;
+}
+#jsMetricModal .jsMetricItemFallback[hidden] {
+ display:none!important;
+}
+#jsMetricModal .jsMetricItemPhoto {
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ object-fit:contain!important;
+ opacity:0!important;
+ transition:opacity .14s ease;
+}
+#jsMetricModal .jsMetricItemPhoto.ready {
+ opacity:1!important;
+}
+#jsMetricModal .jsMetricItemDetails {
+ min-width:0!important;
+ width:100%!important;
+ display:flex!important;
+ flex-direction:column!important;
+ gap:3px!important;
+ flex:1 1 auto!important;
+}
+#jsMetricModal .jsMetricItemTitle {
+ display:-webkit-box!important;
+ -webkit-box-orient:vertical!important;
+ -webkit-line-clamp:2!important;
+ line-clamp:2;
+ overflow:hidden!important;
+ min-height:0!important;
+ max-height:34px!important;
+ font:800 12px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif!important;
+ color:#2b2034!important;
+ white-space:normal!important;
+ overflow-wrap:anywhere;
+}
+#jsMetricModal .jsMetricItemMeta {
+ display:block!important;
+ overflow:hidden!important;
+ white-space:nowrap!important;
+ text-overflow:ellipsis!important;
+ font-size:10px!important;
+ line-height:1.2!important;
+ color:#897b90!important;
+}
+#jsMetricModal .jsMetricItemFooter {
+ display:flex!important;
+ align-items:center!important;
+ justify-content:space-between!important;
+ gap:4px!important;
+ flex-wrap:wrap;
+ margin-top:auto!important;
+ padding-top:4px!important;
+}
+#jsMetricModal .jsMetricItemFooter b {
+ color:var(--js-custom-dark,#572980)!important;
+ font:800 13px/1.15 Georgia,serif!important;
+ white-space:nowrap!important;
+}
+#jsMetricModal .jsMetricState {
+ display:inline-block!important;
+ white-space:nowrap!important;
+ font-size:9px!important;
+ line-height:1.1!important;
+ border-radius:99px!important;
+ padding:5px 7px!important;
+ font-weight:800!important;
+ background:var(--js-custom-soft,#f4eaf7)!important;
+ color:var(--js-custom-dark,#572980)!important;
+}
+#jsMetricModal .jsMetricState-sold {
+ color:#2b724e!important;
+ background:#e5f4ea!important;
+}
+#jsMetricModal .jsMetricState-reserved {
+ color:#94691c!important;
+ background:#fff4d8!important;
+}
+#jsMetricModal .jsMetricState-draft {
+ color:#706579!important;
+ background:#f2eef3!important;
+}
+@media(max-width:360px){
+ #jsMetricModal .jsMetricHead {padding:13px 12px 10px!important;gap:9px!important;min-height:72px!important}
+ #jsMetricModal .jsMetricHead #jsMetricTitle{font-size:23px!important}
+ #jsMetricModal #jsMetricBody{padding-left:11px!important;padding-right:11px!important}
+ #jsMetricModal .jsMetricList{gap:7px!important}
+ #jsMetricModal .jsMetricItem{padding:7px!important;min-height:147px!important}
+ #jsMetricModal .jsMetricItemFooter b{font-size:12px!important}
+ #jsMetricModal .jsMetricState{font-size:8.5px!important;padding:5px 6px!important}
+}
+@media(min-width:640px) {
+ #jsMetricModal .jsMetricSheet {border-radius:27px!important;margin:auto!important;height:min(85dvh,870px)!important}
+}

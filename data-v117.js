@@ -308,7 +308,7 @@ function createSettings(){
   '<div class="jsMorePanel" data-more-panel="app" id="jsMoreAppPanel" hidden></div>'+
   '<div class="jsMorePanel" data-more-panel="about" hidden>'+
    '<div class="jsDataCard"><h3>♥ JennySells</h3><p>Shopping mit Herz: Verkaufsartikel aus Vinted, Kleinanzeigen, eBay, Basar und weiteren Kanälen an einem Ort verwalten.</p>'+
-    '<div class="jsMoreInfoRow"><span>Version</span><strong>v0.11.7-test</strong></div>'+
+    '<div class="jsMoreInfoRow"><span>Version</span><strong>v0.11.8-test</strong></div>'+
     '<div class="jsMoreInfoRow"><span>Datenhaltung</span><strong>IndexedDB, lokal</strong></div>'+
     '<div class="jsMoreInfoRow"><span>Synchronisierung</span><strong>Keine Cloud-Synchronisation</strong></div>'+
     '<p>Du kontrollierst deine Daten. Sichere die App regelmäßig über „Export / Backup“ als ZIP-Datei.</p>'+
@@ -381,7 +381,7 @@ function askRestoreLocal(safety){
 async function exportJson(){
  try{
   await writeChain;
-  const payload={format:'JennySellsArticles',formatVersion:1,appVersion:'0.11.7-test',createdAt:new Date().toISOString(),articles:await all('articles'),categories,settings:{theme}};
+  const payload={format:'JennySellsArticles',formatVersion:1,appVersion:'0.11.8-test',createdAt:new Date().toISOString(),articles:await all('articles'),categories,settings:{theme}};
   const f=new File([JSON.stringify(payload,null,2)],'JennySells_Artikel_'+new Date().toISOString().slice(0,10)+'.json',{type:'application/json'});
   offerFile(f,'JSON-Export ohne Titelbilder');
  }catch(e){notify('JSON-Export fehlgeschlagen: '+e.message,true);}
@@ -457,7 +457,7 @@ async function exportZip(){
    manifest.push({key:entry.key,ref,type:blob.type,createdAt:entry.createdAt||''});
    files.push({name:ref,data:blob});
   });
-  const json={format:'JennySellsBackup',formatVersion:1,appVersion:'0.11.7-test',dbVersion:DB_VERSION,createdAt:new Date().toISOString(),articles,categories,settings:{theme},images:manifest};
+  const json={format:'JennySellsBackup',formatVersion:1,appVersion:'0.11.8-test',dbVersion:DB_VERSION,createdAt:new Date().toISOString(),articles,categories,settings:{theme},images:manifest};
   const zip=await zipStore([{name:'backup.json',data:new TextEncoder().encode(JSON.stringify(json))},...files]);
   offerFile(new File([zip],'JennySells_Backup_'+new Date().toISOString().slice(0,10)+'.zip',{type:'application/zip'}),'Komplett-Backup ZIP');
  }catch(e){notify('Backup fehlgeschlagen: '+e.message,true);}

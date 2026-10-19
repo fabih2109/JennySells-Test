@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.7-test';
+  const VERSION='0.11.8-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=2;
   const IMAGE_STORE='images';

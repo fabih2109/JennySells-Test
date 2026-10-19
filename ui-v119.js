@@ -36,7 +36,7 @@
       about.innerHTML='<div class="jsAboutCard">'+
         '<div class="jsAboutHeart" aria-hidden="true">♥</div>'+
         '<h3>JennySells</h3><div class="jsAboutMotto">SHOPPING MIT HERZ</div>'+
-        '<div class="jsAboutVersion">Version v0.11.7-test</div>'+
+        '<div class="jsAboutVersion">Version v0.11.8-test</div>'+
         '</div>';
     }
     const menuTitle=q('#settings .jsMoreDetailTop h2');
@@ -257,6 +257,8 @@
   function setup(){
     if(started)return;started=true;
     editRoute();relocateSearch();ensurePlus();ensureViewer();ensureNewestBack();unifyBackButtons();patchNavigation();patchRows();
+    // Reuse the same read-only article view from the search screen in KPI dialogs.
+    window.JennySellsViewer={open:showDetail,close:hideDetail};
     // ui-v100 reconstructs its import sheet once during startup; reapply the consistent back button afterwards.
     setTimeout(unifyBackButtons,400);setTimeout(unifyBackButtons,900);
     // Keep the original import launcher as the technical entry point for the OCR flow, but never display it.

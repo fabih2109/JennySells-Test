@@ -147,7 +147,7 @@
     const div=document.createElement('div');div.id='jsHomeChart';div.className='jsHomeChart';
     div.innerHTML='<div class="jsChartHead"><h3>Einnahmen im Zeitraum <button type="button" class="jsChartInfo" id="jsChartDetails" aria-label="Mehr über Einnahmen">i</button></h3><button type="button" class="jsChartMode" id="jsChartMode">Monat⌄</button></div>'+
       '<div class="jsChartMain"><div class="jsChartSummary"><span class="jsChartPeriod" id="jsChartPeriod">—</span><strong id="jsChartAmount">0,00 €</strong><small id="jsChartCount">0 Verkäufe</small><div class="jsChartChange" id="jsChartChange">–</div></div><div class="jsChartPlot" id="jsChartPlot"></div></div>'+
-      '<div class="jsChartNote">Nettoerlöse aus gespeicherten Verkäufen. Keine Demo-Werte.</div>';
+      '<div class="jsChartNote">Nettoerlöse aus gespeicherten Verkäufen.</div>';
     period.insertAdjacentElement('afterend',div);
     $('#jsChartMode').onclick=()=>{mode=mode==='month'?'year':'month';drawChart();};
     $('#jsChartDetails').onclick=()=>{
@@ -155,7 +155,7 @@
       const modal=$('#jsMetricModal');
       if(!modal)return;
       $('#jsMetricTitle').textContent=mode==='month'?'Monatliche Einnahmen':'Jährliche Einnahmen';
-      $('#jsMetricBody').innerHTML='<p class="jsMetricLead">Nettoerlöse aus den gespeicherten JennySells-Verkäufen. Ältere Demo-Verkäufe sind hier nicht eingerechnet.</p>'+
+      $('#jsMetricBody').innerHTML='<p class="jsMetricLead">Nettoerlöse aus den gespeicherten JennySells-Verkäufen.</p>'+
         '<div class="jsChart">'+graph(data.sums,data.labels)+'</div>'+
         '<div class="jsChartNote">Nettoerlös = Verkaufspreis minus Versandkosten und Gebühren.</div>';
       modal.classList.add('show');

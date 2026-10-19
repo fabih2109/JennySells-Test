@@ -26,8 +26,6 @@
       nav.setAttribute('aria-label','Mehr');
     }
     q('#settings [data-more-action="import"]')?.remove();
-    const reset=q('#resetDemoSettings');
-    if(reset){const advanced=q('#jsDataAdvanced');if(advanced){advanced.appendChild(reset);reset.classList.add('jsAdvancedReset');}}
     q('#settings [data-more-section="app"]')?.remove();
     q('#settings [data-more-panel="app"]')?.remove();
     q('#settings .jsMorePanel[data-more-panel="about"]')?.replaceChildren();
@@ -103,9 +101,7 @@
     const status=typeof statusLabel==='function'?statusLabel(item.status||'online'):item.status||'Online';
     const amount=sold?euro(Number(item.soldPrice||0)-Number(item.shipping||0)-Number(item.fees||0)):p;
     const url=(()=>{try{const u=new URL(item.url);return /^https?:$/.test(u.protocol)?u.href:'';}catch{return '';}})();
-    const demoPhoto=window.JennySellsCovers?.demoPath?.(item)||'';
     const photo=item.coverImageKey?'<img class="jsViewerCover" id="jsViewerCover" alt="Titelbild des Artikels" hidden><span id="jsViewerCoverFallback">'+esc(item.emoji||'♡')+'</span>':
-      demoPhoto?'<img class="jsViewerCover" src="'+esc(demoPhoto)+'" alt="Beispielbild zum Artikel" loading="eager">':
       '<span id="jsViewerCoverFallback">'+esc(item.emoji||'♡')+'</span>';
     main.innerHTML=
       '<div class="jsViewerPhoto">'+photo+'</div>'+

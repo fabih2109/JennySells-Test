@@ -16,3 +16,16 @@
 - App-Version, IndexedDB-Schemaversion und Backup-Formatversion sind getrennt.
   Eine neue App-Version erfordert keine Aenderung vorhandener Artikeldaten,
   gespeicherter Bilder oder Datenformate.
+
+## Offizielle Nutzung ab V0.13.0
+
+- Neue Installationen starten ohne Artikel und ohne erfundene Verkaufswerte.
+  Keine Demo-Datensaetze, Beispielbilder oder Reset-auf-Demo-Funktionen in die
+  App aufnehmen. Standard-Kategorien, Kanaele und neutrale Platzhalter bleiben
+  normale Bedienhilfen.
+- Vorhandene lokale Artikel und Bilddateien bei Updates erhalten; auch frueher
+  gespeicherte Beispielartikel nicht automatisch loeschen. Bereinigungen des
+  Datenbestands brauchen einen ausdruecklichen Nutzerauftrag.
+- Bei Aenderungen an Start, Speicherung oder Backup einen ZIP-Export mit
+  anschliessender Wiederherstellung einschliesslich Bilddateien pruefen.
+  Kompatibilitaet vorhandener Backups beibehalten.

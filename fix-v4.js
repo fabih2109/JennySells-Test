@@ -8,31 +8,7 @@ let items=[];
 let currentChild='';
 const $=s=>document.querySelector(s);
 
-const demo=[
-['C&A Jogginghose','C&A','86','Hose / Jogginghose','Ben','Sehr gut','Vinted','online',12,'2026-10-05',null,null,'Keller → Kiste 86/92','👖'],
-['H&M Winterjacke','H&M','104','Jacke','Felix','Gut','Vinted','online',18,'2026-09-27',null,null,'Garderobe','🧥'],
-['Nike Sweatshirt','Nike','110','Pullover','Felix','Sehr gut','Vinted','reserved',16,'2026-10-02',null,null,'Kiste 104/110','👕'],
-['Zara Jeans','Zara','98','Hose','Felix','Gut','Vinted','sold',10,'2026-09-18',8,'2026-10-03','Kiste 98/104','👖'],
-['Lupilu Regenhose','Lupilu','92','Outdoor','Ben','Gut','Vinted','online',7,'2026-10-01',null,null,'Kiste 86/92','👖'],
-['Adidas Sneaker','Adidas','28','Schuhe','Felix','Gut','Vinted','sold',14,'2026-09-10',10,'2026-09-29','Schuhschrank','👟'],
-['Ergee Schlafanzug Set','Ergee','86','Schlafanzug','Ben','Sehr gut','Vinted','online',9,'2026-10-08',null,null,'Kiste 86/92','👕'],
-['Name It Strickpulli','Name It','104','Pullover','Felix','Sehr gut','Vinted','draft',11,'',null,null,'Kiste 104/110','👕'],
-['Sterntaler Mütze','Sterntaler','51','Mütze','Ben','Gut','Vinted','sold',6,'2026-09-02',4,'2026-09-21','Winterkiste','🧢'],
-['Finkid Softshelljacke','Finkid','110','Jacke','Felix','Sehr gut','Vinted','online',20,'2026-10-09',null,null,'Garderobe','🧥'],
-['Puky Laufrad','Puky','','Fahrzeug','Felix','Gut','Kleinanzeigen','sold',45,'2026-08-20',35,'2026-09-04','Garage','🚲'],
-['Playmobil Feuerwehr','Playmobil','','Spielzeug','Felix','Sehr gut','Kleinanzeigen','online',21,'2026-10-01',null,null,'Spielzeugkiste','🧩'],
-['BabyBjörn Wippe','BabyBjörn','','Baby','Ben','Gut','Kleinanzeigen','sold',35,'2026-08-15',27.5,'2026-09-12','Dachboden','🍼'],
-['LEGO Duplo Set','LEGO','','Spielzeug','Felix','Gut','Kleinanzeigen','online',22,'2026-10-07',null,null,'Spielzimmer','🧩'],
-['Kinderbücher Paket','Ravensburger','','Bücher','Felix','Gut','Kleinanzeigen','sold',12,'2026-09-01',8,'2026-09-23','Bücherregal','📚'],
-['Winterstiefel','Superfit','27','Schuhe','Felix','Gut','Kleinanzeigen','online',16,'2026-10-06',null,null,'Schuhschrank','👟'],
-['Matschküche Zubehör','','','Spielzeug','Felix','Gut','Kleinanzeigen','online',10,'',null,null,'Garage','🧸'],
-['Babybody Paket 5x','Lupilu','74','Bodies','Ben','Gut','Basar','sold',8,'2026-09-14',7.5,'2026-09-14','Basarkiste','👕'],
-['Holzpuzzle Paket','','','Spielzeug','Felix','Gut','Basar','sold',6,'2026-09-14',5,'2026-09-14','Basarkiste','🧩'],
-['Babymütze + Schal','','80','Accessoires','Ben','Sehr gut','Basar','sold',4,'2026-09-14',3.5,'2026-09-14','Basarkiste','🧢']
-];
-
-function seed(){return demo.map((d,i)=>({id:'demo'+i,title:d[0],brand:d[1],size:d[2],category:d[3],child:d[4],condition:d[5],source:d[6],status:d[7],price:d[8],onlineSince:d[9],soldPrice:d[10],soldDate:d[11],storage:d[12],emoji:d[13],demoImage:'/JennySells-Test/demo-images/article-'+String(i+1).padStart(2,'0')+'.svg',purchasePrice:null,purchaseYear:'',url:'',note:'',shipping:0,fees:0,createdAt:new Date(Date.now()-i*86400000).toISOString()}));}
-function load(){try{items=JSON.parse(localStorage.getItem(KEY)||'null')||seed()}catch{items=seed()}/* IndexedDB hydration in data-v117.js; never overwrite storage during bootstrap. */}
+function load(){try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');items=Array.isArray(stored)?stored:[]}catch{items=[]}/* IndexedDB hydration in data-v117.js; never overwrite storage during bootstrap. */}
 function save(){if(window.JennySellsData?.queueSave)return window.JennySellsData.queueSave(items);localStorage.setItem(KEY,JSON.stringify(items));}
 function net(i){return Number(i.soldPrice||0)-Number(i.shipping||0)-Number(i.fees||0);}
 function statusLabel(s){return {online:'Online',reserved:'Reserviert',sold:'Verkauft',draft:'Entwurf'}[s]||s;}
@@ -137,5 +113,4 @@ $('#sourceFilter').onchange=renderItems;$('#statusFilter').onchange=renderItems;
 $('#categoryFilter').onchange=renderItems;$('#sizeFilter').onchange=renderItems;
 $('#jsSearchReset').onclick=()=>{$('#globalSearch').value='';['sourceFilter','statusFilter','categoryFilter','sizeFilter'].forEach(id=>$('#'+id).value='');currentChild='';renderItems();$('#globalSearch').focus();};
 document.addEventListener('click',e=>{let t=e.target.closest('.channelGo');if(t){$('#sourceFilter').value=t.dataset.channel;go('items');}});
-if($('#resetDemo'))$('#resetDemo').onclick=()=>{items=seed();save();currentChild='';$('#globalSearch').value='';$('#sourceFilter').value='';$('#statusFilter').value='';$('#categoryFilter').value='';$('#sizeFilter').value='';refresh();go('home');};
 load();refresh();parseShare();

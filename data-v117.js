@@ -239,7 +239,7 @@ const MORE_SECTIONS={
  backup:{title:'Export / Backup',subtitle:'Vollständige Sicherungen und Wiederherstellung'},
  categories:{title:'Standard-Kategorien',subtitle:'Kategorien verwalten und Dubletten vermeiden'},
  design:{title:'Design',subtitle:'Farbdesign und Hintergrund wählen'},
- app:{title:'App-Einstellungen',subtitle:'Version, lokaler Speicher und Demo-Daten'},
+ app:{title:'App-Einstellungen',subtitle:'Version und lokaler Speicher'},
  about:{title:'Über JennySells',subtitle:'Deine Artikelübersicht mit Herz'}
 };
 let currentMoreSection='';
@@ -268,7 +268,7 @@ function closeMoreSection(){
 function createSettings(){
  const sec=q('#settings');if(!sec||q('#jsDataSettings'))return;
  const originalCard=sec.querySelector('.settingsCard');
- const demoReset=q('#resetDemoSettings'),oldNote=sec.querySelector(':scope > .note');
+ const oldNote=sec.querySelector(':scope > .note');
  sec.querySelector(':scope > .hero')?.remove();
  const wrap=document.createElement('div');wrap.id='jsDataSettings';
  wrap.innerHTML=
@@ -318,7 +318,6 @@ function createSettings(){
  sec.appendChild(wrap);
  const appPanel=q('#jsMoreAppPanel');
  if(originalCard)appPanel.appendChild(originalCard);
- if(demoReset)appPanel.appendChild(demoReset);
  if(oldNote)appPanel.appendChild(oldNote);
  q('#jsMoreLanding').querySelectorAll('[data-more-section]').forEach(b=>b.onclick=()=>openMoreSection(b.dataset.moreSection));
  q('[data-more-action="import"]').onclick=()=>{
@@ -427,7 +426,7 @@ async function readZip(file){
  let end=-1;
  for(let i=bytes.length-22;i>=Math.max(0,bytes.length-65557);i--){if(dv.getUint32(i,true)===0x06054b50){end=i;break;}}
  if(end<0)throw new Error('Kein gültiges ZIP');
- const count=dv.getUint16(end+10),offset=dv.getUint32(end+16),out=new Map();
+ const count=dv.getUint16(end+10,true),offset=dv.getUint32(end+16,true),out=new Map();
  if(count>5000)throw new Error('Zu viele Dateien im Backup');
  let p=offset;
  for(let i=0;i<count;i++){
@@ -534,16 +533,7 @@ async function importJsonFile(ev){
   ]);
  }catch(e){notify('JSON-Import nicht möglich: '+e.message,true);}
 }
-function askResetDemo(){
- showDialog('Demo-Daten wirklich neu laden?','Achtung: Alle aktuellen Artikel werden durch die 20 eingebetteten Beispielartikel ersetzt. Zuvor unbedingt ein Komplett-Backup erstellen.',[
-  {text:'Abbrechen'},
-  {text:'20 Demo-Artikel laden',danger:true,run:async()=>{
-   items=seed();
-   try{await queueSave(items);refresh();notify('Demo-Datensatz geladen.');}catch(e){notify('Demo-Reset fehlgeschlagen: '+e.message,true);}
-  }}
- ]);
-}
-window.JennySellsData={askResetDemo,queueSave,whenSaved:()=>writeChain,validateEditorCategory,findCategory,similarity,getStatus:()=>({ready,theme,categories:[...categories],count:items.length}),exportZip,exportJson};
+window.JennySellsData={queueSave,whenSaved:()=>writeChain,validateEditorCategory,findCategory,similarity,getStatus:()=>({ready,theme,categories:[...categories],count:items.length}),exportZip,exportJson};
 function startup(){
  const app=q('.app');if(app)app.setAttribute('inert','');
  q('.bottom')?.setAttribute('inert','');

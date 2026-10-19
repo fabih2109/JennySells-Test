@@ -150,7 +150,6 @@ html[data-js-theme] #home .stat:nth-child(2) .metricIcon{background:var(--js-cus
 .jsMorePanel .jsDataCard{margin-top:12px}
 .jsMorePanel .jsDataCard h3{font-size:20px}
 .jsMorePanel .settingsCard{margin:13px 0;border-radius:20px}
-.jsMorePanel #resetDemoSettings{width:100%;margin-top:12px}
 .jsMorePanel .note{margin-top:13px}
 .jsDataAdvanced{
  border-top:1px solid #ecdfef;margin-top:13px;padding-top:12px;

@@ -130,8 +130,7 @@
 }
 #jsMetricModal .jsMetricList.jsMetricEmpty {grid-template-columns:1fr!important}
 
-/* Small, legible card. Portrait photos and square demo art get their own
-   near-square preview rather than a wide, shallow letterboxed strip. */
+/* Small, legible card with a square preview for each photo. */
 #jsMetricModal .jsMetricItem {
   box-sizing:border-box!important;
   min-width:0!important;

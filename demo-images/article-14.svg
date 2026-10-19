@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Duplo">
- <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff3c9"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
- <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
- <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
- <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
- <g transform="rotate(2 180 180)"><rect x="50" y="160" width="105" height="105" rx="12" fill="#e2ad3e" stroke="#4b425b" stroke-opacity=".3" stroke-width="4"/><rect x="161" y="117" width="107" height="148" rx="12" fill="#82a7c5" stroke="#4b425b" stroke-opacity=".3" stroke-width="4"/><rect x="168" y="112" width="28" height="9" rx="4" fill="#82a7c5"/><rect x="226" y="112" width="28" height="9" rx="4" fill="#82a7c5"/><circle cx="88" cy="161" r="14" fill="#e2ad3e"/><circle cx="130" cy="161" r="14" fill="#e2ad3e"/><path d="M73 213h58 M191 180h45" stroke="white" stroke-width="12" stroke-linecap="round" opacity=".6"/></g>
- </svg>

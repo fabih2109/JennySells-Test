@@ -1,26 +1,18 @@
-/* JennySells v0.11.7: IndexedDB thumbnail + demo image pipeline.
+/* JennySells: IndexedDB thumbnails and editor previews.
    Original image blobs stay in images store; article records and backups remain unchanged. */
 (()=>{
 'use strict';
-const ROOT='/JennySells-Test/demo-images/';
 const DB_NAME='JennySellsDB',DB_VERSION=2;
 const resolved=new Map(),inflight=new Map();
 let queued=false,editorTicket=0;
 const q=s=>document.querySelector(s);
 
-function demoPath(item){
- if(!item)return '';
- const match=/^demo(\d{1,2})$/.exec(String(item.id??''));
- if(match){const n=Number(match[1]);if(n>=0&&n<20)return ROOT+'article-'+String(n+1).padStart(2,'0')+'.svg';}
- const path=String(item.demoImage||'');
- return /^\/JennySells-Test\/demo-images\/article-(?:0[1-9]|1\d|20)\.svg$/.test(path)?path:'';
-}
 function makeKeyList(item){
  if(!item)return [];
  const keys=[];
  if(typeof item.coverImageKey==='string'&&item.coverImageKey.trim())keys.push(item.coverImageKey.trim());
  // Repair the display of an older imported record whose key was not copied to the article.
- if(item.id&&(!/^demo\d{1,2}$/.test(String(item.id)))){
+ if(item.id){
   const fallback='cover:'+String(item.id);
   if(!keys.includes(fallback))keys.push(fallback);
  }
@@ -71,13 +63,12 @@ async function imageForItem(item){
   const src=await imageUrlForKey(key);
   if(src)return {src,key,source:'indexeddb'};
  }
- const fallback=demoPath(item);
- return fallback?{src:fallback,key:'',source:'demo'}:null;
+ return null;
 }
 function showImageInThumb(thumb,item){
  if(!thumb||!item)return;
  const keys=makeKeyList(item);
- const wanted=keys.join('\n')+'|'+demoPath(item)+'|'+String(item.emoji||'');
+ const wanted=keys.join('\n')+'|'+String(item.emoji||'');
  if(thumb.dataset.jsCoverSignature===wanted&&thumb.querySelector('.jsArticleCoverImg'))return;
  thumb.dataset.jsCoverSignature=wanted;
  thumb.classList.add('jsArticleThumb');
@@ -152,8 +143,8 @@ async function showInEditor(item){
   box.classList.add('show');
  };
  img.onerror=()=>{if(ticket!==editorTicket)return;box.classList.remove('show');};
- if(label)label.textContent=reference.source==='demo'?'Beispielbild':'Titelbild';
- if(hint)hint.textContent=reference.source==='demo'?'Demonstrationsbild – kein echtes Produktfoto.':'Lokal gespeichertes Artikelbild.';
+ if(label)label.textContent='Titelbild';
+ if(hint)hint.textContent='Lokal gespeichertes Artikelbild.';
  box.dataset.jsImageKind=reference.source;
  img.src=reference.src;
  if(img.complete&&img.naturalWidth>0)img.onload();
@@ -173,7 +164,7 @@ function attach(){
  }
  schedule();
 }
-window.JennySellsCovers={demoPath,imageForItem,showInEditor,syncAll,schedule};
+window.JennySellsCovers={imageForItem,showInEditor,syncAll,schedule};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',attach,{once:true});
 else attach();
 })();

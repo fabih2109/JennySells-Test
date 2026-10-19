@@ -1,13 +1,5 @@
 (()=>{
   const VERSION=window.JennySellsVersion;
-  const ARCHIVE=[
-    {date:'2022-03-12',amount:18},{date:'2022-05-21',amount:27},{date:'2022-08-07',amount:31},{date:'2022-11-18',amount:42},{date:'2022-12-10',amount:27},
-    {date:'2023-02-11',amount:35},{date:'2023-04-22',amount:46},{date:'2023-06-18',amount:54},{date:'2023-09-02',amount:63},{date:'2023-11-25',amount:49},{date:'2023-12-09',amount:33},
-    {date:'2024-01-20',amount:42},{date:'2024-03-17',amount:58},{date:'2024-05-04',amount:71},{date:'2024-07-13',amount:64},{date:'2024-09-21',amount:82},{date:'2024-11-16',amount:54},{date:'2024-12-07',amount:39},
-    {date:'2025-01-18',amount:36},{date:'2025-02-15',amount:44},{date:'2025-03-22',amount:61},{date:'2025-04-26',amount:47},{date:'2025-05-31',amount:73},{date:'2025-06-28',amount:55},{date:'2025-07-19',amount:86},{date:'2025-08-30',amount:68},{date:'2025-09-20',amount:91},{date:'2025-10-18',amount:77},{date:'2025-11-15',amount:64},{date:'2025-12-13',amount:53},
-    {date:'2026-01-17',amount:41},{date:'2026-02-14',amount:58},{date:'2026-03-21',amount:36},{date:'2026-04-18',amount:72},{date:'2026-05-16',amount:49},{date:'2026-06-20',amount:63},{date:'2026-07-18',amount:81},{date:'2026-08-22',amount:57}
-  ];
-
   function addFont(){
     if(document.querySelector('link[data-jennysells-logo-font-v7]'))return;
     const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap';l.dataset.jennysellsLogoFontV7='1';document.head.appendChild(l);
@@ -60,7 +52,6 @@
   const fmt=n=>Number(n||0).toLocaleString('de-DE',{style:'currency',currency:'EUR'});
   const itemNet=i=>Number(i.soldPrice||0)-Number(i.shipping||0)-Number(i.fees||0);
   function currentSold(){return (typeof items!=='undefined'?items:[]).filter(i=>i.status==='sold'&&i.soldDate).map(i=>({date:i.soldDate,amount:itemNet(i),title:i.title,source:i.source}));}
-  function allChartSales(){return [...ARCHIVE,...currentSold()];}
 
   function lineChart(points,labels,color='#71389b'){
     const W=420,H=210,p={l:38,r:12,t:16,b:34};
@@ -73,8 +64,8 @@
     return `<div class="jsChart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Einnahmenverlauf">${grid}<path d="${path}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${dots}${labs}</svg></div>`;
   }
 
-  function monthSeries(){const now=new Date(2026,9,1),sales=allChartSales(),pts=[],labs=[];for(let k=11;k>=0;k--){const d=new Date(now.getFullYear(),now.getMonth()-k,1),key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');pts.push(sales.filter(s=>s.date.startsWith(key)).reduce((a,s)=>a+s.amount,0));labs.push(d.toLocaleDateString('de-DE',{month:'short'}).replace('.',''));}return {pts,labs};}
-  function yearSeries(){const sales=allChartSales(),years=[2022,2023,2024,2025,2026];return {labs:years.map(String),pts:years.map(y=>sales.filter(s=>s.date.startsWith(String(y))).reduce((a,s)=>a+s.amount,0))};}
+  function monthSeries(){const now=new Date(),sales=currentSold(),pts=[],labs=[];for(let k=11;k>=0;k--){const d=new Date(now.getFullYear(),now.getMonth()-k,1),key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');pts.push(sales.filter(s=>s.date.startsWith(key)).reduce((a,s)=>a+s.amount,0));labs.push(d.toLocaleDateString('de-DE',{month:'short'}).replace('.',''));}return {pts,labs};}
+  function yearSeries(){const sales=currentSold(),year=new Date().getFullYear(),years=Array.from({length:5},(_,i)=>year-4+i);return {labs:years.map(String),pts:years.map(y=>sales.filter(s=>s.date.startsWith(String(y))).reduce((a,s)=>a+s.amount,0))};}
 
   // The four overview dialogs show all matching articles, never just the first eight.
   const metricEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -144,8 +135,8 @@
     if(cards[3])cards[3].onclick=()=>{const s=items.filter(i=>i.status==='sold');openMetric('Einnahmen',`<p class="jsMetricLead">Tatsächlich erfasster Nettoerlös aus verkauften Artikeln: Verkaufspreis abzüglich Versand und Gebühren.</p><div class="jsBreakdown"><div class="jsMini"><b>${fmt(s.reduce((a,i)=>a+itemNet(i),0))}</b><span>Nettoerlös</span></div><div class="jsMini"><b>${s.length}</b><span>Verkäufe</span></div></div>${listHtml(s.sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||'')))}`)};
 
     const periods=[...document.querySelectorAll('.periods .period')];
-    if(periods[0]){periods[0].onclick=()=>{const s=monthSeries();openMetric('Monatliche Einnahmen',`<p class="jsMetricLead">Netto-Verkaufseinnahmen der letzten 12 Monate. Für die Demo werden ältere archivierte Beispielverkäufe ergänzt, damit der Verlauf sichtbar wird.</p>${lineChart(s.pts,s.labs,'#3389c9')}<div class="jsChartNote">Aktuelle JennySells-Artikel bleiben unverändert; ältere Werte dienen nur als Demo-Verkaufshistorie.</div>`);};}
-    if(periods[1]){periods[1].onclick=()=>{const s=yearSeries();openMetric('Jährliche Einnahmen',`<p class="jsMetricLead">Entwicklung der Netto-Verkaufseinnahmen über mehrere Jahre – inklusive archivierter Demo-Historie.</p>${lineChart(s.pts,s.labs,'#34a66a')}<div class="jsChartNote">Die historischen Werte dienen der Demo des langfristigen Trends.</div>`);};}
+    if(periods[0]){periods[0].onclick=()=>{const s=monthSeries();openMetric('Monatliche Einnahmen',`<p class="jsMetricLead">Netto-Verkaufseinnahmen der letzten 12 Monate aus deinen gespeicherten Verkäufen.</p>${lineChart(s.pts,s.labs,'#3389c9')}<div class="jsChartNote">Nettoerlös = Verkaufspreis minus Versandkosten und Gebühren.</div>`);};}
+    if(periods[1]){periods[1].onclick=()=>{const s=yearSeries();openMetric('Jährliche Einnahmen',`<p class="jsMetricLead">Netto-Verkaufseinnahmen der letzten fünf Jahre aus deinen gespeicherten Verkäufen.</p>${lineChart(s.pts,s.labs,'#34a66a')}<div class="jsChartNote">Nettoerlös = Verkaufspreis minus Versandkosten und Gebühren.</div>`);};}
   }
 
   function patchSettings(){const v=document.getElementById('appVersion');if(v)v.textContent='V'+VERSION;}

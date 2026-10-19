@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Sweatshirt">
- <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9e9d8"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
- <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
- <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
- <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
- <g transform="rotate(0 180 180)"><path d="M112 88l38-21h37l42 21 50 46-28 39-31-19 7 129H92l7-129-31 19-28-39z" fill="#dd9d64" stroke="#4b425b" stroke-opacity=".38" stroke-width="4" stroke-linejoin="round"/><path d="M142 70q17 43 52 0 M92 274h135 M70 167l-23-29 M272 164l-19-26" fill="none" stroke="#fff" stroke-width="7" opacity=".5" stroke-linecap="round"/></g>
- </svg>

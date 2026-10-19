@@ -40,7 +40,6 @@ body[data-js-current-page]:not([data-js-current-page="home"]) .app > .brand{disp
  background:var(--js-custom-soft,#f0e3f5);color:var(--js-custom-dark,#54227d);
  font-weight:800;font-size:13px;
 }
-.jsAdvancedReset{margin:13px 0 2px!important;background:#fbf1f7!important;font-size:12px!important}
 .jsJDialog,.jsViewerBg{position:fixed;inset:0;z-index:180;background:rgba(24,11,34,.50);padding:0}
 .jsJDialog[hidden],.jsViewerBg[hidden]{display:none!important}
 .jsJDialog{display:flex;align-items:flex-end;justify-content:center}

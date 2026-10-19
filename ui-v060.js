@@ -46,17 +46,13 @@
     if(document.getElementById('settings'))return;
     const app=document.querySelector('.app');if(!app)return;
     const section=document.createElement('section');section.className='view';section.id='settings';section.innerHTML=`
-      <div class="hero"><h1>Einstellungen</h1><p>JennySells Testversion</p></div>
+      <div class="hero"><h1>Einstellungen</h1><p>JennySells</p></div>
       <div class="settingsCard">
         <div class="settingsRow"><span>App-Version</span><strong><span class="versionBadge" id="appVersion">V${VERSION}</span></strong></div>
         <div class="settingsRow"><span>Datenhaltung</span><strong>IndexedDB (lokal)</strong></div>
-        <div class="settingsRow"><span>Demo-Startdaten</span><strong>20 Beispielartikel</strong></div>
-        <div class="settingsRow"><span>Projekt</span><strong>JennySells-Test</strong></div>
       </div>
-      <button class="action secondary" id="resetDemoSettings">↻ Demo-Daten zurücksetzen</button>
-      <div class="note">Testversion: Noch keine Cloud-Synchronisation. Die Daten liegen aktuell im lokalen Browser-/App-Speicher.</div>`;
+      <div class="note">Die Daten liegen im lokalen Browser-/App-Speicher. Sichere sie regelmäßig als Komplett-Backup außerhalb der App.</div>`;
     app.appendChild(section);
-    const reset=document.getElementById('resetDemoSettings');if(reset)reset.onclick=()=>window.JennySellsData?.askResetDemo?.();
 
     const nav=document.querySelector('.bottom');
     if(nav&&!nav.querySelector('[data-go="settings"]')){

@@ -1,0 +1,64 @@
+/* JennySells v0.11.7: reliable saved images and visible editor previews. */
+.app .row.itemOpen .thumb.jsArticleThumb{
+ position:relative!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ isolation:isolate;
+ overflow:hidden!important;
+ background-image:none!important;
+ color:inherit!important;
+ padding:0!important;
+}
+.app .row.itemOpen .thumb.jsArticleThumb .jsArticleCoverImg{
+ display:block!important;
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ max-width:none!important;
+ max-height:none!important;
+ object-fit:cover!important;
+ object-position:center!important;
+ opacity:0;
+ border-radius:inherit;
+ transition:opacity .13s ease;
+ background-color:#f4ecf5;
+}
+.app .row.itemOpen .thumb.jsArticleThumb .jsArticleCoverImg.ready{
+ opacity:1!important;
+}
+.app .row.itemOpen .thumb.jsArticleThumb .jsArticleThumbFallback{
+ display:inline-flex!important;
+ align-items:center;
+ justify-content:center;
+ position:relative;
+ z-index:0;
+}
+.app .row.itemOpen .thumb.jsArticleThumb .jsArticleThumbFallback[hidden]{
+ display:none!important;
+}
+#jsEditorCover.jsCoverPreview.show{
+ display:flex!important;
+ align-items:center;
+ gap:13px;
+ min-height:88px;
+ margin:10px 0 12px;
+}
+#jsEditorCover.jsCoverPreview img{
+ width:76px!important;
+ height:84px!important;
+ object-fit:contain!important;
+ background:#f3e9f4!important;
+ border-radius:12px!important;
+ flex-shrink:0;
+}
+#jsEditorCover.jsCoverPreview b{
+ display:block;
+ color:var(--js-custom-dark,#54227d);
+ font-size:13px;
+}
+#jsEditorCover.jsCoverPreview span{
+ font-size:11px;
+ line-height:1.35;
+}

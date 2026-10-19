@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.6-test';
+  const VERSION='0.11.7-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=2;
   const IMAGE_STORE='images';
@@ -299,6 +299,7 @@
 
   async function showCoverInEditor(item){
     ensureEditorCover();
+    if(window.JennySellsCovers?.showInEditor)return window.JennySellsCovers.showInEditor(item);
     const box=q('#jsEditorCover'),img=box?.querySelector('img');
     if(!box||!img)return;
     const key=item?.coverImageKey||(item?.id===pendingItemId?pendingCover:null);

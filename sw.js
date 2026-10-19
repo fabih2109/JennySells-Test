@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v45';
+const CACHE='jennysells-test-v46';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,

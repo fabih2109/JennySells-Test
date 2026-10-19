@@ -1,0 +1,139 @@
+/* Three-column article cards for Search and Sales.
+   Keep the existing article buttons, filters and saved-image pipeline. */
+.app :is(#itemList,#soldList) {
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-auto-rows:max-content!important;
+  align-items:stretch!important;
+  align-content:start!important;
+  gap:7px!important;
+}
+.app :is(#itemList,#soldList) > .note {
+  grid-column:1/-1;
+}
+.app :is(#itemList,#soldList) .row.itemOpen {
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:5px!important;
+  min-width:0!important;
+  min-height:0!important;
+  width:100%!important;
+  height:auto!important;
+  margin:0!important;
+  padding:6px!important;
+  border:1px solid #f0e6ef!important;
+  border-radius:14px!important;
+  background:#fff!important;
+  text-align:left!important;
+  box-shadow:0 4px 12px rgba(53,31,70,.04)!important;
+}
+.app :is(#itemList,#soldList) .row.itemOpen:focus-visible {
+  outline:2px solid var(--js-custom-accent,#71389b);
+  outline-offset:2px;
+}
+.app :is(#itemList,#soldList) .row.itemOpen .thumb {
+  flex:0 0 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:1/1;
+  border-radius:10px!important;
+  font-size:29px!important;
+  background:var(--js-custom-soft,#f4eaf7)!important;
+}
+.app :is(#itemList,#soldList) .row.itemOpen .jsArticleCoverImg {
+  object-fit:contain!important;
+}
+.app :is(#itemList,#soldList) .row.itemOpen .rowMain {
+  display:flex;
+  flex:1 0 auto;
+  flex-direction:column;
+  gap:3px;
+  min-width:0;
+  width:100%;
+}
+.app :is(#itemList,#soldList) .row.itemOpen .rowMain b {
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  max-height:2.6em;
+  overflow:hidden!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere;
+  font:800 11px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif!important;
+  color:#2b2034!important;
+}
+.app :is(#itemList,#soldList) .row.itemOpen .rowMain small {
+  margin:0!important;
+  font-size:9px!important;
+  line-height:1.2!important;
+  color:#897b90!important;
+}
+.app :is(#itemList,#soldList) .marketChip {
+  display:block;
+  align-self:flex-start;
+  width:fit-content;
+  max-width:100%;
+  padding:3px 5px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:9px;
+  line-height:1.2;
+}
+.app :is(#itemList,#soldList) .marketSymbol {
+  width:14px;
+  height:14px;
+  margin-right:3px;
+  vertical-align:middle;
+}
+.app :is(#itemList,#soldList) .jsPackageBadge {
+  align-self:flex-start;
+  max-width:100%;
+  margin:0;
+  padding:4px 5px;
+  border-radius:8px;
+  font-size:9px!important;
+  line-height:1.2;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.app :is(#itemList,#soldList) .row.itemOpen .right {
+  display:flex;
+  flex:0 0 auto;
+  flex-direction:column;
+  align-items:flex-start;
+  align-self:stretch;
+  gap:4px;
+  min-width:0!important;
+  margin-top:auto;
+  padding-top:4px;
+  text-align:left;
+}
+.app :is(#itemList,#soldList) .row.itemOpen .right strong {
+  display:block;
+  max-width:100%;
+  font:800 clamp(11px,3.05vw,13px)/1.1 Georgia,serif;
+  font-variant-numeric:tabular-nums;
+  color:var(--js-custom-dark,#572980);
+}
+.app :is(#itemList,#soldList) .row.itemOpen .right .pill {
+  margin:0!important;
+  padding:4px 7px;
+  font-size:9px!important;
+  line-height:1.1;
+}
+.app :is(#itemList,#soldList) .rowChevron {
+  display:none;
+}
+@media(max-width:375px) {
+  .app :is(#itemList,#soldList) {gap:6px!important}
+  .app :is(#itemList,#soldList) .row.itemOpen {padding:5px!important;gap:4px!important;border-radius:12px!important}
+  .app :is(#itemList,#soldList) .row.itemOpen .thumb {border-radius:8px!important}
+  .app :is(#itemList,#soldList) .row.itemOpen .rowMain b {font-size:10.5px!important}
+  .app :is(#itemList,#soldList) .row.itemOpen .rowMain small {font-size:8.5px!important}
+  .app :is(#itemList,#soldList) .row.itemOpen .right strong {font-size:11px}
+  .app :is(#itemList,#soldList) .row.itemOpen .right .pill {font-size:8.5px!important;padding:4px 6px}
+}

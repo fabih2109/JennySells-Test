@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.8-test';
+  const VERSION=window.JennySellsVersion;
   const ROOT='/JennySells-Test/';
   let logoPromise=null;
 
@@ -112,7 +112,7 @@
     const badge=document.getElementById('appVersion');
     const current=badge?versionParts(badge.textContent):null;
     const target=versionParts(VERSION);
-    if(badge && (!current || !target || compareVersions(current,target)<=0)) badge.textContent='v'+VERSION;
+    if(badge && (!current || !target || compareVersions(current,target)<=0)) badge.textContent='V'+VERSION;
     document.documentElement.dataset.jennysellsVersion=VERSION;
   }
 

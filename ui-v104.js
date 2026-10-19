@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.8-test';
+  const VERSION=window.JennySellsVersion;
   const DB_NAME='JennySellsDB';
   const DB_VERSION=2;
   const IMAGE_STORE='images';
@@ -277,7 +277,7 @@
       }
     }
   }
-  function setVersion(){const el=q('#appVersion');if(el)el.textContent='v'+VERSION;document.documentElement.dataset.jennysellsVersion=VERSION}
+  function setVersion(){const el=q('#appVersion');if(el)el.textContent='V'+VERSION;document.documentElement.dataset.jennysellsVersion=VERSION}
   function run(){addStyles();ensureUi();setVersion()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(run,320));else setTimeout(run,320);setTimeout(run,750);
   window.JennySellsV104={version:VERSION};

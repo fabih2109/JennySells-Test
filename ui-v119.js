@@ -36,7 +36,7 @@
       about.innerHTML='<div class="jsAboutCard">'+
         '<div class="jsAboutHeart" aria-hidden="true">♥</div>'+
         '<h3>JennySells</h3><div class="jsAboutMotto">SHOPPING MIT HERZ</div>'+
-        '<div class="jsAboutVersion">Version v0.11.8-test</div>'+
+        '<div class="jsAboutVersion">Version V'+esc(window.JennySellsVersion)+'</div>'+
         '</div>';
     }
     const menuTitle=q('#settings .jsMoreDetailTop h2');

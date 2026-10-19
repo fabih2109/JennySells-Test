@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.8-test';
+  const VERSION=window.JennySellsVersion;
 
   function addFont(){
     if(document.querySelector('link[data-jennysells-logo-font]')) return;
@@ -48,7 +48,7 @@
     const section=document.createElement('section');section.className='view';section.id='settings';section.innerHTML=`
       <div class="hero"><h1>Einstellungen</h1><p>JennySells Testversion</p></div>
       <div class="settingsCard">
-        <div class="settingsRow"><span>App-Version</span><strong><span class="versionBadge" id="appVersion">v${VERSION}</span></strong></div>
+        <div class="settingsRow"><span>App-Version</span><strong><span class="versionBadge" id="appVersion">V${VERSION}</span></strong></div>
         <div class="settingsRow"><span>Datenhaltung</span><strong>IndexedDB (lokal)</strong></div>
         <div class="settingsRow"><span>Demo-Startdaten</span><strong>20 Beispielartikel</strong></div>
         <div class="settingsRow"><span>Projekt</span><strong>JennySells-Test</strong></div>
@@ -75,7 +75,7 @@
     set('monthLabel',now.toLocaleDateString('de-DE',{month:'long',year:'numeric'}).replace(/^./,m=>m.toUpperCase()));
     set('monthRevenue',eur(monthRev));set('monthCount',monthSold.length+' '+(monthSold.length===1?'Verkauf':'Verkäufe'));set('monthAvg','Ø '+eur(monthSold.length?monthRev/monthSold.length:0));
     set('yearLabel',year);set('yearRevenue',eur(yearRev));set('yearCount',yearSold.length+' '+(yearSold.length===1?'Verkauf':'Verkäufe'));set('yearAvg','Ø '+eur(yearSold.length?yearRev/yearSold.length:0));
-    set('appVersion','v'+VERSION);
+    set('appVersion','V'+VERSION);
   }
 
   addFont();addStyles();ensurePeriodCards();ensureSettings();renderPeriods();

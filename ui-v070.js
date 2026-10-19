@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.8-test';
+  const VERSION=window.JennySellsVersion;
   const ARCHIVE=[
     {date:'2022-03-12',amount:18},{date:'2022-05-21',amount:27},{date:'2022-08-07',amount:31},{date:'2022-11-18',amount:42},{date:'2022-12-10',amount:27},
     {date:'2023-02-11',amount:35},{date:'2023-04-22',amount:46},{date:'2023-06-18',amount:54},{date:'2023-09-02',amount:63},{date:'2023-11-25',amount:49},{date:'2023-12-09',amount:33},
@@ -148,7 +148,7 @@
     if(periods[1]){periods[1].onclick=()=>{const s=yearSeries();openMetric('Jährliche Einnahmen',`<p class="jsMetricLead">Entwicklung der Netto-Verkaufseinnahmen über mehrere Jahre – inklusive archivierter Demo-Historie.</p>${lineChart(s.pts,s.labs,'#34a66a')}<div class="jsChartNote">Die historischen Werte dienen der Demo des langfristigen Trends.</div>`);};}
   }
 
-  function patchSettings(){const v=document.getElementById('appVersion');if(v)v.textContent='v'+VERSION;}
+  function patchSettings(){const v=document.getElementById('appVersion');if(v)v.textContent='V'+VERSION;}
   function init(){addFont();addStyles();ensureModal();bindMetrics();patchSettings();}
   init();
   if(typeof refresh==='function'){const prev=refresh;refresh=function(){prev();setTimeout(()=>{bindMetrics();patchSettings();},0)};}

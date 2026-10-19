@@ -1,5 +1,5 @@
 /* JennySells – KPI-Detailansichten, 3 Kacheln pro Reihe.
-   Geaenderte Version der vorhandenen metric-grid-v125.css.
+   Zeilen wachsen mit dem Kachelinhalt statt in die Listenhoehe zu schrumpfen.
    Die oberen Kennzahlen bleiben fixiert, nur die Artikelliste scrollt.
 */
 
@@ -115,6 +115,7 @@
   min-height:0!important;
   display:grid!important;
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-auto-rows:max-content!important;
   align-items:stretch!important;
   align-content:start!important;
   gap:7px!important;
@@ -136,7 +137,7 @@
   min-width:0!important;
   width:100%!important;
   min-height:0!important;
-  height:100%!important;
+  height:auto!important;
   display:flex!important;
   flex-direction:column!important;
   align-items:stretch!important;
@@ -192,7 +193,7 @@
 #jsMetricModal .jsMetricItemPhoto.ready {opacity:1!important}
 #jsMetricModal .jsMetricItemDetails {
   display:flex!important;
-  flex:1 1 auto!important;
+  flex:1 0 auto!important;
   flex-direction:column!important;
   gap:3px!important;
   min-width:0!important;

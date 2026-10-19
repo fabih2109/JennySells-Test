@@ -5,6 +5,7 @@
 const VERSION=window.JennySellsVersion;
 const DB_NAME='JennySellsDB',DB_VERSION=2;
 const STORES=['images','articles','categories','settings','meta'];
+const DEMO_CLEANUP_KEY='demoCleanupV0131';
 const LEGACY_KEY='jennysellsItemsV4';
 const THEMES={
  purple:{name:'Lila',accent:'#71389b',soft:'#f0e3f5',bg:'#f9e9fc',bg2:'#fff8fc',dark:'#54227d'},
@@ -102,6 +103,39 @@ function queueSave(newItems){
  }).catch(err=>{ready=false;notify('Speichern fehlgeschlagen! Keine weiteren Änderungen vornehmen. Bitte zuerst ein Backup der vorhandenen Daten prüfen. '+err.message,true);throw err;});
  return writeChain;
 }
+async function removeStoredDemoArticles(stored){
+ if(await get('meta',DEMO_CLEANUP_KEY))return 0;
+ const removed=stored.filter(item=>/^demo(?:[0-9]|1[0-9])$/.test(String(item.id)));
+ const record={key:DEMO_CLEANUP_KEY,completedAt:new Date().toISOString(),removedCount:removed.length};
+ if(removed.length){
+  const name='JennySells_vor_Demo_Bereinigung_'+new Date().toISOString().slice(0,10)+'.zip';
+  record.blob=await buildZipBackup(stored,await all('images'),name);
+  if(record.blob.size>300*1024*1024)throw new Error('Die Sicherung ist größer als die unterstützten 300 MB.');
+  record.name=name;
+ }
+ const signature=entries=>JSON.stringify([...entries].sort((a,b)=>String(a.id).localeCompare(String(b.id))));
+ let failure;
+ await transact(['articles','meta'],tx=>{
+  const articles=tx.objectStore('articles'),check=articles.getAll();
+  check.onsuccess=()=>{
+   // Commit the recovery ZIP and deletions together, only for the backed-up article state.
+   try{
+    if(signature(check.result)!==signature(stored))throw new Error('Der Artikelbestand wurde während der Sicherung geändert.');
+    tx.objectStore('meta').put(record);
+    removed.forEach(item=>articles.delete(item.id));
+   }catch(e){failure=e;tx.abort();}
+  };
+ }).catch(e=>{throw failure||e;});
+ return removed.length;
+}
+async function mountDemoCleanupBackup(){
+ const record=await get('meta',DEMO_CLEANUP_KEY);
+ if(!(record?.blob instanceof Blob)||q('#jsDemoCleanupBackup'))return;
+ const button=document.createElement('button');button.id='jsDemoCleanupBackup';button.type='button';button.className='jsDataAction';
+ button.textContent='🛟 Sicherung vor Demo-Bereinigung (.zip)';
+ button.onclick=()=>offerFile(new File([record.blob],record.name,{type:'application/zip'}),'Sicherung vor Demo-Bereinigung ZIP');
+ q('#jsBackupExport')?.insertAdjacentElement('afterend',button);
+}
 async function bootstrap(){
  const d=await openDB();
  let marker=await get('meta','initialized'),stored=[];
@@ -128,9 +162,16 @@ async function bootstrap(){
  const savedTheme=await get('settings','theme');
  theme=THEMES[savedTheme?.value]?savedTheme.value:'purple';
  applyTheme(theme,false);
+ let removed=0,cleanupError='';
+ try{
+  removed=await removeStoredDemoArticles(stored);
+  await mountDemoCleanupBackup();
+ }catch(e){cleanupError='Demo-Bereinigung abgebrochen; vorhandene Artikel bleiben erhalten. '+e.message;}
+ stored=await all('articles');items=stored;lastPersisted=snapshot(stored);
  ready=true;
  refresh();
- notify('IndexedDB bereit: '+stored.length+' Artikel, '+categories.length+' Kategorien, Bilder separat.');
+ notify(cleanupError||('IndexedDB bereit: '+stored.length+' Artikel, '+categories.length+' Kategorien, Bilder separat.'+
+  (removed?' '+removed+' Demo-Artikel entfernt. Die Sicherung davor findest du hier unter „Sicherung vor Demo-Bereinigung“.':'')),!!cleanupError);
  const app=q('.app');if(app)app.removeAttribute('inert');
  q('.bottom')?.removeAttribute('inert');
  q('#jsDataLoading')?.remove();
@@ -444,11 +485,7 @@ async function readZip(file){
  }
  return out;
 }
-async function exportZip(){
- if(!ready)return notify('Datenbank ist noch nicht bereit.',true);
- try{
-  await writeChain;notify('Backup wird zusammengestellt …');
-  const [articles,images]=await Promise.all([all('articles'),all('images')]);
+async function buildZipBackup(articles,images,name){
   const manifest=[],files=[];
   images.forEach((entry,index)=>{
    const blob=entry.blob;if(!(blob instanceof Blob))return;
@@ -459,7 +496,15 @@ async function exportZip(){
   });
   const json={format:'JennySellsBackup',formatVersion:1,appVersion:VERSION,dbVersion:DB_VERSION,createdAt:new Date().toISOString(),articles,categories,settings:{theme},images:manifest};
   const zip=await zipStore([{name:'backup.json',data:new TextEncoder().encode(JSON.stringify(json))},...files]);
-  offerFile(new File([zip],'JennySells_Backup_'+new Date().toISOString().slice(0,10)+'.zip',{type:'application/zip'}),'Komplett-Backup ZIP');
+  return new File([zip],name,{type:'application/zip'});
+}
+async function exportZip(){
+ if(!ready)return notify('Datenbank ist noch nicht bereit.',true);
+ try{
+  await writeChain;notify('Backup wird zusammengestellt …');
+  const [articles,images]=await Promise.all([all('articles'),all('images')]);
+  const file=await buildZipBackup(articles,images,'JennySells_Backup_'+new Date().toISOString().slice(0,10)+'.zip');
+  offerFile(file,'Komplett-Backup ZIP');
  }catch(e){notify('Backup fehlgeschlagen: '+e.message,true);}
 }
 async function restoreFile(ev){
@@ -483,6 +528,7 @@ async function restoreFile(ev){
 async function restoreConfirmed(backup,images){
  try{
   restoring=true;await writeChain.catch(()=>{});ready=false;
+  const cleanup=await get('meta',DEMO_CLEANUP_KEY);
   await transact(STORES,tx=>{
    STORES.forEach(s=>tx.objectStore(s).clear());
    backup.articles.forEach(i=>tx.objectStore('articles').put(i));
@@ -490,6 +536,8 @@ async function restoreConfirmed(backup,images){
    backup.categories.forEach(name=>{if(typeof name==='string'&&name.trim())tx.objectStore('categories').put({name:name.trim()});});
    tx.objectStore('settings').put({key:'theme',value:THEMES[backup.settings?.theme]?backup.settings.theme:'purple'});
    tx.objectStore('meta').put({key:'initialized',value:true,restoredAt:new Date().toISOString()});
+   // An explicit restore must not immediately run the one-time cleanup again.
+   if(cleanup)tx.objectStore('meta').put(cleanup);
   });
   localStorage.removeItem(LEGACY_KEY);
   location.reload();

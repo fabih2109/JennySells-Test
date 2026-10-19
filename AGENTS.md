@@ -29,3 +29,12 @@
 - Bei Aenderungen an Start, Speicherung oder Backup einen ZIP-Export mit
   anschliessender Wiederherstellung einschliesslich Bilddateien pruefen.
   Kompatibilitaet vorhandener Backups beibehalten.
+- Fuer V0.13.1 wurde die einmalige Bereinigung gespeicherter Artikel mit den
+  urspruenglichen Demo-IDs `demo0` bis `demo19` ausdruecklich beauftragt. Vor dem
+  Entfernen muss eine vollstaendige ZIP-Sicherung zusammen mit der Loeschung
+  atomar gespeichert werden. Eigene Artikel und alle Bilddateien erhalten.
+  Die Sicherung muss unter Export / Backup herunterladbar bleiben. Manuell
+  wiederhergestellte Bestaende nicht erneut automatisch bereinigen.
+- Regressionstest fuer diese Bereinigung: `python3 tests/demo_cleanup_smoke.py`
+  (Python Playwright und Chromium). Testdaten werden nur in isolierten
+  Browser-Profilen angelegt und gehoeren nicht zum App-Datenbestand.

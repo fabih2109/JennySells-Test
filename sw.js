@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v50';
+const CACHE='jennysells-test-v51';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,
@@ -14,14 +14,14 @@ const ASSETS=[
   ROOT+'ui-v090.js?v=128',
   ROOT+'ui-v100.js?v=128',
   ROOT+'ui-v102.js?v=128',
-  ROOT+'ui-v104.js?v=0.13.0',
+  ROOT+'ui-v104.js?v=0.13.1',
   ROOT+'vinted-parser-v109.js?v=111',
   ROOT+'install-test-v108.js?v=108',
   ROOT+'logo-v090.css?v=90',
   ROOT+'ui-v112.css?v=112',
   ROOT+'ui-v113.css?v=116',
   ROOT+'ui-v112.js?v=130',
-  ROOT+'data-v117.js?v=130',
+  ROOT+'data-v117.js?v=131',
   ROOT+'data-v117.css?v=130',
   ROOT+'ui-v119.js?v=130',
   ROOT+'ui-v119.css?v=130',

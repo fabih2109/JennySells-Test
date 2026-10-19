@@ -31,7 +31,7 @@ const demo=[
 ['Babymütze + Schal','','80','Accessoires','Ben','Sehr gut','Basar','sold',4,'2026-09-14',3.5,'2026-09-14','Basarkiste','🧢']
 ];
 
-function seed(){return demo.map((d,i)=>({id:'demo'+i,title:d[0],brand:d[1],size:d[2],category:d[3],child:d[4],condition:d[5],source:d[6],status:d[7],price:d[8],onlineSince:d[9],soldPrice:d[10],soldDate:d[11],storage:d[12],emoji:d[13],purchasePrice:null,purchaseYear:'',url:'',note:'',shipping:0,fees:0,createdAt:new Date(Date.now()-i*86400000).toISOString()}));}
+function seed(){return demo.map((d,i)=>({id:'demo'+i,title:d[0],brand:d[1],size:d[2],category:d[3],child:d[4],condition:d[5],source:d[6],status:d[7],price:d[8],onlineSince:d[9],soldPrice:d[10],soldDate:d[11],storage:d[12],emoji:d[13],demoImage:'/JennySells-Test/demo-images/article-'+String(i+1).padStart(2,'0')+'.svg',purchasePrice:null,purchaseYear:'',url:'',note:'',shipping:0,fees:0,createdAt:new Date(Date.now()-i*86400000).toISOString()}));}
 function load(){try{items=JSON.parse(localStorage.getItem(KEY)||'null')||seed()}catch{items=seed()}/* IndexedDB hydration in data-v117.js; never overwrite storage during bootstrap. */}
 function save(){if(window.JennySellsData?.queueSave)return window.JennySellsData.queueSave(items);localStorage.setItem(KEY,JSON.stringify(items));}
 function net(i){return Number(i.soldPrice||0)-Number(i.shipping||0)-Number(i.fees||0);}

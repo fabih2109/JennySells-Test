@@ -1,4 +1,4 @@
-const CACHE='jennysells-test-v42';
+const CACHE='jennysells-test-v43';
 const ROOT='/JennySells-Test/';
 const ASSETS=[
   ROOT,
@@ -27,6 +27,28 @@ const ASSETS=[
   ROOT+'ui-v119.css',
   ROOT+'quick-sale-v121.js',
   ROOT+'quick-sale-v121.css',
+  ROOT+'article-covers-v123.js',
+  ROOT+'article-covers-v123.css',
+  ROOT+'demo-images/article-01.svg',
+  ROOT+'demo-images/article-02.svg',
+  ROOT+'demo-images/article-03.svg',
+  ROOT+'demo-images/article-04.svg',
+  ROOT+'demo-images/article-05.svg',
+  ROOT+'demo-images/article-06.svg',
+  ROOT+'demo-images/article-07.svg',
+  ROOT+'demo-images/article-08.svg',
+  ROOT+'demo-images/article-09.svg',
+  ROOT+'demo-images/article-10.svg',
+  ROOT+'demo-images/article-11.svg',
+  ROOT+'demo-images/article-12.svg',
+  ROOT+'demo-images/article-13.svg',
+  ROOT+'demo-images/article-14.svg',
+  ROOT+'demo-images/article-15.svg',
+  ROOT+'demo-images/article-16.svg',
+  ROOT+'demo-images/article-17.svg',
+  ROOT+'demo-images/article-18.svg',
+  ROOT+'demo-images/article-19.svg',
+  ROOT+'demo-images/article-20.svg',
   ROOT+'header-art-v112.svg',
   ROOT+'JennySells_Logo_Final_17-10-2026_v2.png'
 ];

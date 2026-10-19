@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.5-test';
+  const VERSION='0.11.6-test';
   const DB_NAME='JennySellsDB';
   const DB_VERSION=2;
   const IMAGE_STORE='images';
@@ -312,6 +312,7 @@
   }
 
   async function applyCovers(){
+    if(window.JennySellsCovers?.schedule){window.JennySellsCovers.schedule();return;}
     if(typeof items==='undefined')return;
     const rows=qa('.itemOpen');
     for(const row of rows){
@@ -321,6 +322,7 @@
       if(!item?.coverImageKey||!thumb)continue;
       try{
         const blob=await getImage(item.coverImageKey);
+        if(window.JennySellsCovers?.schedule){window.JennySellsCovers.schedule();return;}
         if(!blob)continue;
         const old=objectUrls.get(thumb);if(old)URL.revokeObjectURL(old);
         const u=URL.createObjectURL(blob);objectUrls.set(thumb,u);

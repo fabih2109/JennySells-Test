@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Regenhose">
+ <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7e6c1"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
+ <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
+ <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
+ <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
+ <g transform="rotate(4 180 180)"><path d="M112 83h136l-4 84-26 119h-46l-12-104-15 104H99l-21-119z" fill="#c99342" stroke="#4b425b" stroke-opacity=".35" stroke-width="4" stroke-linejoin="round"/><path d="M114 111h132 M160 111v50 M96 245h48 M187 245h48" fill="none" stroke="#4b425b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".45"/><path d="M111 120q8 30 29 23 M213 143q24 1 26-23" fill="none" stroke="#fff" opacity=".5" stroke-width="4"/></g>
+ </svg>

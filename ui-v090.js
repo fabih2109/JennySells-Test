@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='0.11.5-test';
+  const VERSION='0.11.6-test';
   const ROOT='/JennySells-Test/';
   let logoPromise=null;
 

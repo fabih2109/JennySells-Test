@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Winterstiefel">
+ <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9e9db"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
+ <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
+ <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
+ <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
+ <g transform="rotate(-4 180 180)"><path d="M72 97h86l-5 123 49 24v33H50v-31l27-22z" fill="#ad7959" stroke="#4b425b" stroke-opacity=".4" stroke-width="4"/><path d="M179 104h72l-2 123 52 20v30H162v-30l22-18z" fill="#87624b" stroke="#4b425b" stroke-opacity=".45" stroke-width="4"/><path d="M53 262h144 M165 262h133 M97 139h35 M199 147h32" stroke="white" stroke-width="6" stroke-linecap="round" opacity=".55"/></g>
+ </svg>

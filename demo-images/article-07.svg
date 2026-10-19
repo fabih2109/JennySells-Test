@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Schlafanzug">
+ <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9e2f1"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
+ <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
+ <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
+ <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
+ <g transform="rotate(-2 180 180)"><path d="M87 82l38-17h62l38 17 33 37-27 33-21-12 4 67H98l4-67-21 12-26-33z" fill="#b773aa" stroke="#4b425b" stroke-opacity=".35" stroke-width="4"/><path d="M130 210h62l5 72h-28l-8-55-8 55h-30z" fill="#b773aa" stroke="#4b425b" stroke-opacity=".4" stroke-width="4"/><path d="M126 70q22 32 52 0 M140 101h40" fill="none" stroke="#4b425b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".45"/></g>
+ </svg>

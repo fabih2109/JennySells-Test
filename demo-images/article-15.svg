@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Bücher">
+ <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eee8ff"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
+ <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
+ <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
+ <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
+ <g transform="rotate(4 180 180)"><path d="M62 102l100-15 5 176-104 17z" fill="#8981b1" stroke="#4b425b" stroke-opacity=".35" stroke-width="4"/><path d="M164 90l87 17-5 176-79-21z" fill="#c4778d" stroke="#4b425b" stroke-opacity=".35" stroke-width="4"/><path d="M165 88v178 M92 142l45-9 M195 151l32 7" stroke="white" stroke-width="8" stroke-linecap="round" opacity=".7"/></g>
+ </svg>

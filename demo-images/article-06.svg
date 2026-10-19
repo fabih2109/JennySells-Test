@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Sneaker">
+ <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e5ebfa"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
+ <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
+ <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
+ <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
+ <g transform="rotate(-4 180 180)"><path d="M53 200l50-12 31-69 45 12 18 55 69 34c12 6 17 18 15 38l-5 19H57l-13-24z" fill="#5d7caa" stroke="#4b425b" stroke-opacity=".42" stroke-width="4"/><path d="M50 253h228 M143 158l41 19 M135 172l46 20 M124 185l47 21" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/><path d="M51 273h225" stroke="#4b425b" stroke-width="7" opacity=".52"/></g>
+ </svg>

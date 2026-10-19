@@ -1,0 +1,24 @@
+/* JennySells v0.11.6 – real IndexedDB covers and category-specific demo art in cards. */
+.app .row .thumb.jsArticleThumb{
+ position:relative!important;overflow:hidden!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ padding:0!important;background-image:none!important;
+ background-color:var(--js-custom-soft,#f0e3f5)!important;
+ isolation:isolate;
+}
+.app .row .thumb.jsArticleThumb .jsArticleThumbImage{
+ display:block;width:100%;height:100%;position:absolute;inset:0;
+ object-fit:cover;object-position:center;
+ background:#f5edf7;
+ border-radius:inherit;
+}
+.app .row .thumb.jsArticleThumb .jsArticleThumbImage[hidden],
+.app .row .thumb.jsArticleThumb .jsArticleThumbFallback[hidden]{
+ display:none!important;
+}
+.app .row .thumb.jsArticleThumb .jsArticleThumbFallback{
+ font-size:inherit;line-height:1;position:relative;z-index:0;
+}
+.app .row .thumb.jsArticleThumb.hasCover{color:inherit!important}
+#jsViewerBg .jsViewerPhoto img.jsViewerCover{display:block;width:100%;height:100%;object-fit:contain}
+#jsViewerBg .jsViewerPhoto img.jsViewerCover[hidden]{display:none!important}

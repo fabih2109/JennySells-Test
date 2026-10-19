@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-label="Babywippe">
+ <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e6f5f1"/><stop offset="1" stop-color="#fffefa"/></linearGradient></defs>
+ <rect x="0" y="0" width="360" height="360" rx="26" fill="url(#bg)"/>
+ <circle cx="302" cy="62" r="72" fill="#fff" opacity=".34"/><circle cx="39" cy="305" r="95" fill="#fff" opacity=".21"/>
+ <ellipse cx="180" cy="290" rx="114" ry="16" fill="#5e4967" opacity=".09"/>
+ <g transform="rotate(0 180 180)"><path d="M100 106q74-47 156 23l-45 65q-74 21-130-37z" fill="#779fa0" stroke="#4b425b" stroke-opacity=".38" stroke-width="4"/><path d="M102 165l-49 100h210l-46-84" fill="none" stroke="#9e9da4" stroke-width="10" stroke-linecap="round"/><path d="M110 111q21 42 86 43" fill="none" stroke="white" stroke-width="7" opacity=".7"/><circle cx="130" cy="109" r="13" fill="#f4f0df"/></g>
+ </svg>

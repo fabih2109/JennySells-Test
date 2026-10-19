@@ -36,7 +36,7 @@
       about.innerHTML='<div class="jsAboutCard">'+
         '<div class="jsAboutHeart" aria-hidden="true">♥</div>'+
         '<h3>JennySells</h3><div class="jsAboutMotto">SHOPPING MIT HERZ</div>'+
-        '<div class="jsAboutVersion">Version v0.11.5-test</div>'+
+        '<div class="jsAboutVersion">Version v0.11.6-test</div>'+
         '</div>';
     }
     const menuTitle=q('#settings .jsMoreDetailTop h2');
@@ -103,7 +103,10 @@
     const status=typeof statusLabel==='function'?statusLabel(item.status||'online'):item.status||'Online';
     const amount=sold?euro(Number(item.soldPrice||0)-Number(item.shipping||0)-Number(item.fees||0)):p;
     const url=(()=>{try{const u=new URL(item.url);return /^https?:$/.test(u.protocol)?u.href:'';}catch{return '';}})();
-    const photo=item.coverImageKey?'<img class="jsViewerCover" id="jsViewerCover" alt="Titelbild des Artikels" hidden><span id="jsViewerCoverFallback">'+esc(item.emoji||'♡')+'</span>':'<span id="jsViewerCoverFallback">'+esc(item.emoji||'♡')+'</span>';
+    const demoPhoto=window.JennySellsCovers?.demoPath?.(item)||'';
+    const photo=item.coverImageKey?'<img class="jsViewerCover" id="jsViewerCover" alt="Titelbild des Artikels" hidden><span id="jsViewerCoverFallback">'+esc(item.emoji||'♡')+'</span>':
+      demoPhoto?'<img class="jsViewerCover" src="'+esc(demoPhoto)+'" alt="Beispielbild zum Artikel" loading="eager">':
+      '<span id="jsViewerCoverFallback">'+esc(item.emoji||'♡')+'</span>';
     main.innerHTML=
       '<div class="jsViewerPhoto">'+photo+'</div>'+
       '<div class="jsViewerInfo">'+
